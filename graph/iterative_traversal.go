@@ -20,45 +20,29 @@ type (
 
 // IterativeTraversal solves the problem in O(n) time and O(n) space.
 func IterativeTraversal(graph []*Vertex) ([]int, []int) {
-	dfs := traverseAllNodes(new(stack), graph)
-	bfs := traverseAllNodes(new(queue), graph)
-	return bfs, dfs
+	panic("not implemented")
+
 }
 
 // traverseAllNodes performs BFS or DFS if a graph and a container that is
 // either respectively a stack or queue passed to it.
 func traverseAllNodes(c container, graph []*Vertex) []int {
-	output := []int{}
-	visited := make(map[*Vertex]struct{})
-	c.Push(graph[0])
+	panic("not implemented")
 
-	for c.Len() != 0 {
-		tmp := c.Pop()
-		for _, neighbor := range tmp.Edges {
-			c.Push(neighbor)
-		}
-		if _, ok := visited[tmp]; !ok {
-			output = append(output, tmp.Val)
-			visited[tmp] = struct{}{}
-		}
-	}
-	return output
 }
 
-func newVertex(v int) *Vertex { return &Vertex{Val: v, Edges: []*Vertex{}} }
+func newVertex(v int) *Vertex { panic("not implemented") }
 
-func (q *queue) Len() int       { return len(q.collection) }
-func (q *queue) Push(n *Vertex) { q.collection = append(q.collection, n) }
+func (q *queue) Len() int       { panic("not implemented") }
+func (q *queue) Push(n *Vertex) { panic("not implemented") }
 func (q *queue) Pop() *Vertex {
-	tmp := q.collection[0]
-	q.collection = q.collection[1:len(q.collection)]
-	return tmp
+	panic("not implemented")
+
 }
 
-func (s *stack) Len() int       { return len(s.collection) }
-func (s *stack) Push(n *Vertex) { s.collection = append(s.collection, n) }
+func (s *stack) Len() int       { panic("not implemented") }
+func (s *stack) Push(n *Vertex) { panic("not implemented") }
 func (s *stack) Pop() *Vertex {
-	tmp := s.collection[len(s.collection)-1]
-	s.collection = s.collection[:len(s.collection)-1]
-	return tmp
+	panic("not implemented")
+
 }

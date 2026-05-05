@@ -1,70 +1,44 @@
 package strings
 
-import (
-	"strings"
-)
-
 var dbs []map[string]string
 
 // RunDBCommand solves the problem in O(1) time and O(n) space.
 func RunDBCommand(cmd string) string {
-	splitCmd := strings.Split(cmd, " ")
-	switch splitCmd[0] {
-	case `SET`:
-		set(splitCmd[1], splitCmd[2])
-	case `GET`:
-		return get(splitCmd[1])
-	case `EXISTS`:
-		return exists(splitCmd[1])
-	case `UNSET`:
-		unset(splitCmd[1])
-	case `BEGIN`:
-		begin()
-	case `ROLLBACK`:
-		rollback()
-	case `COMMIT`:
-		commit()
-	}
-	return ""
+	panic("not implemented")
+
 }
 
 func set(key, value string) {
-	db := dbs[len(dbs)-1]
-	db[key] = value
+	panic("not implemented")
+
 }
 
 func get(key string) string {
-	db := dbs[len(dbs)-1]
-	v, ok := db[key]
-	if !ok {
-		return "nil"
-	}
-	return v
+	panic("not implemented")
+
 }
 
 func exists(key string) string {
-	db := dbs[len(dbs)-1]
-	if _, ok := db[key]; !ok {
-		return "false"
-	}
-	return "true"
+	panic("not implemented")
+
 }
 
 func unset(key string) {
-	db := dbs[len(dbs)-1]
-	delete(db, key)
+	panic("not implemented")
+
 }
 
 func begin() {
-	clonedDB := make(map[string]string)
-	dbs = append(dbs, clonedDB)
+	panic("not implemented")
+
 }
 
 func rollback() {
-	dbs = dbs[:len(dbs)-1]
+	panic("not implemented")
+
 }
 
 func commit() {
-	dbs[len(dbs)-2] = dbs[len(dbs)-1]
-	rollback()
+	panic("not implemented")
+
 }

@@ -12,36 +12,23 @@ var ErrEmptyStack = errors.New("stack is empty")
 
 // Max solves the problem in O(1) time and O(n) space.
 func (maxStack *MaxStack) Max() int {
-	if len(maxStack.stack2) == 0 {
-		return -1
-	}
-	return maxStack.stack2[len(maxStack.stack2)-1]
+	panic("not implemented")
+
 }
 
 // Push adds an integer to the stack.
 func (maxStack *MaxStack) Push(i int) {
-	maxStack.stack1 = append(maxStack.stack1, i)
-	if len(maxStack.stack2) == 0 {
-		maxStack.stack2 = append(maxStack.stack2, i)
-	} else {
-		maxStack.stack2 = append(maxStack.stack2, max(i, maxStack.stack2[len(maxStack.stack2)-1]))
-	}
+	panic("not implemented")
+
 }
 
 // Pop returns the last inserted integer.
 func (maxStack *MaxStack) Pop() (int, error) {
-	if len(maxStack.stack1) == 0 {
-		return -1, ErrEmptyStack
-	}
-	tmp := maxStack.stack1[len(maxStack.stack1)-1]
-	maxStack.stack1 = maxStack.stack1[0 : len(maxStack.stack1)-1]
-	maxStack.stack2 = maxStack.stack2[0 : len(maxStack.stack2)-1]
-	return tmp, nil
+	panic("not implemented")
+
 }
 
 func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	panic("not implemented")
+
 }

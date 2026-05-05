@@ -10,46 +10,21 @@ type Chessboard [][]int
 
 // NQueens solves the problem in O(n!) time and O(n) space.
 func NQueens(n int) []Chessboard {
-	output := nQueensRecursive(0, n, make([]int, n), make(Chessboard, 0))
-	return toPrettyChessboard(output, n)
+	panic("not implemented")
+
 }
 
 func nQueensRecursive(row, n int, cols []int, output Chessboard) Chessboard {
-	if n == 0 {
-		return output
-	}
-	if row == n {
-		output = append(output, append([]int{}, cols...))
-		return output
-	}
-	for col := range n {
-		if isValidQueenPlacement(row, col, cols) {
-			cols[row] = col
-			output = nQueensRecursive(row+1, n, cols, output)
-		}
-	}
-	return output
+	panic("not implemented")
+
 }
 
 func isValidQueenPlacement(row, col int, cols []int) bool {
-	for i := range row {
-		if col == cols[i] || col-row == cols[i]-i || col+row == cols[i]+i {
-			return false
-		}
-	}
-	return true
+	panic("not implemented")
+
 }
 
 func toPrettyChessboard(solutions Chessboard, n int) []Chessboard {
-	chessboards := make([]Chessboard, len(solutions))
-	for i, row := range solutions {
-		chessBoard := make(Chessboard, n)
-		for j, col := range row {
-			newRow := make([]int, n)
-			newRow[col] = queen
-			chessBoard[j] = newRow
-		}
-		chessboards[i] = chessBoard
-	}
-	return chessboards
+	panic("not implemented")
+
 }

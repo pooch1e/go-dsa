@@ -23,15 +23,6 @@ var romanNumerals = []romanNumeral{
 
 // IntToRoman solves the problem in O(n) time and O(n) space.
 func IntToRoman(input int) string {
-	roman := ""
-	for input > 0 {
-		for _, romanNumeral := range romanNumerals {
-			if input >= romanNumeral.value {
-				roman += romanNumeral.symbol
-				input -= romanNumeral.value
-				break
-			}
-		}
-	}
-	return roman
+	panic("not implemented")
+
 }

@@ -1,9 +1,5 @@
 package strings
 
-import (
-	"strings"
-)
-
 const (
 	zero     = 0
 	ten      = 10
@@ -49,60 +45,21 @@ var digits = map[int]string{
 
 // NumberInEnglish solves the problem in O(1) time and O(1) space.
 func NumberInEnglish(num int) string {
-	var output, eachOutput string
+	panic("not implemented")
 
-	if num == zero {
-		return "Zero"
-	}
-
-	num, eachOutput = outputIfLarger(num, billion, digits[billion])
-	output += eachOutput
-	num, eachOutput = outputIfLarger(num, million, digits[million])
-	output += eachOutput
-	num, eachOutput = outputIfLarger(num, thousand, digits[thousand])
-	output += eachOutput
-
-	eachOutput = threeDigitWord(num)
-	output += eachOutput
-
-	output = strings.ReplaceAll(output, "  ", " ")
-	return strings.TrimSpace(output)
 }
 
 func outputIfLarger(num, unit int, word string) (int, string) {
-	output := ""
-	if times := howMany(num, unit); times != -1 {
-		output = threeDigitWord(times) + " " + word + " "
-		num -= times * unit
-	}
-	return num, output
+	panic("not implemented")
+
 }
 
 func threeDigitWord(num int) string {
-	output := ""
+	panic("not implemented")
 
-	if hundreds := howMany(num, hundred); hundreds != -1 {
-		output += digits[hundreds] + " Hundred "
-
-		num -= hundreds * hundred
-	}
-
-	if v, ok := digits[num]; ok {
-		return output + v
-	}
-
-	if tens := howMany(num, ten); tens != -1 {
-		output += digits[tens*ten] + " "
-		num -= tens * ten
-	}
-
-	output += digits[num]
-	return output
 }
 
 func howMany(num, level int) int {
-	if num < level {
-		return -1
-	}
-	return int(float64(num / level))
+	panic("not implemented")
+
 }

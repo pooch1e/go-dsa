@@ -13,20 +13,11 @@ var phone = map[byte]string{
 
 // PhoneLetterCombinations solves the problem in O(3^n) time and O(3^n) space.
 func PhoneLetterCombinations(digits string) []string {
-	combinations := []string{}
-	if len(digits) > 0 {
-		phoneLetterCombinationsRecursive(digits, "", &combinations)
-	}
-	return combinations
+	panic("not implemented")
+
 }
 
 func phoneLetterCombinationsRecursive(digits, prefix string, combinations *[]string) {
-	if len(prefix) == len(digits) {
-		*combinations = append(*combinations, prefix)
-		return
-	}
+	panic("not implemented")
 
-	for _, letter := range phone[digits[len(prefix)]] {
-		phoneLetterCombinationsRecursive(digits, prefix+string(letter), combinations)
-	}
 }
