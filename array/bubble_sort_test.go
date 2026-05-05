@@ -1,8 +1,10 @@
 package array
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -34,21 +36,17 @@ To sort {2,3,1} using Bubble Sort:
 6- Do not swap 2 and 3 because 2 < 3.
 7- The list is sorted, return {1,2,3}.
 */
-func TestBubbleSort(t *testing.T) {
-	tests := []struct {
-		input, sorted []int
-	}{
-		{[]int{}, []int{}},
-		{[]int{1}, []int{1}},
-		{[]int{1, 2}, []int{1, 2}},
-		{[]int{2, 1}, []int{1, 2}},
-		{[]int{2, 3, 1}, []int{1, 2, 3}},
-		{[]int{4, 2, 3, 1, 5}, []int{1, 2, 3, 4, 5}},
-	}
-	for i, test := range tests {
-		BubbleSort(test.input)
-		if !slices.Equal(test.input, test.sorted) {
-			t.Fatalf("Failed test case #%d. Want %v got %v", i, test.sorted, test.input)
+var _ = DescribeTable("BubbleSort",
+	func(input []int, sorted []int) {
+		BubbleSort(input)
+		if !slices.Equal(input, sorted) {
+			Expect(input).To(Equal(sorted))
 		}
-	}
-}
+	},
+	Entry("BubbleSort #1", []int{}, []int{}),
+	Entry("BubbleSort #2", []int{1}, []int{1}),
+	Entry("BubbleSort #3", []int{1, 2}, []int{1, 2}),
+	Entry("BubbleSort #4", []int{2, 1}, []int{1, 2}),
+	Entry("BubbleSort #5", []int{2, 3, 1}, []int{1, 2, 3}),
+	Entry("BubbleSort #6", []int{4, 2, 3, 1, 5}, []int{1, 2, 3, 4, 5}),
+)

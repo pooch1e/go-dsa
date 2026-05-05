@@ -1,6 +1,9 @@
 package strings
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestReverseVowels tests solution(s) with the following signature and problem description:
@@ -13,24 +16,18 @@ appear in it.
 For example given "coat", return "caot", because the vowels are "o" and "a" and their positions
 are reversed.
 */
-func TestReverseVowels(t *testing.T) {
-	tests := []struct {
-		word     string
-		reversed string
-	}{
-		{"umbrella", "ambrellu"},
-		{"coat", "caot"},
-		{"eventually", "avunteelly"},
-		{"sooner rather than later", "seanar rethar then lotor"},
-	}
-
-	for i, test := range tests {
-		got, err := ReverseVowels(test.word)
+var _ = DescribeTable("ReverseVowels",
+	func(word string, reversed string) {
+		got, err := ReverseVowels(word)
 		if err != nil {
-			t.Fatalf("Failed test case #%d. Unexpected Error. Error: %s", i, err)
+			Expect(err).ToNot(HaveOccurred())
 		}
-		if got != test.reversed {
-			t.Fatalf("Failed test case #%d. Want %q got %q", i, test.reversed, got)
+		if got != reversed {
+			Expect(got).To(Equal(reversed))
 		}
-	}
-}
+	},
+	Entry("ReverseVowels #1", "umbrella", "ambrellu"),
+	Entry("ReverseVowels #2", "coat", "caot"),
+	Entry("ReverseVowels #3", "eventually", "avunteelly"),
+	Entry("ReverseVowels #4", "sooner rather than later", "seanar rethar then lotor"),
+)

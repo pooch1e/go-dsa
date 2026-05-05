@@ -1,8 +1,10 @@
 package array
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -30,21 +32,17 @@ To sort {2,3,1} using Insertion Sort:
 3- Swap 3 and 1 since 1<3 so the sorted list is {2,1,3} and unsorted list is empty. Continue by comparing 1 and 2 and swapping since 1<2 so the list becomes {1,2,3}.
 4- Since there are no elements left in the unsorted list, the list is sorted so return {1,2,3}.
 */
-func TestInsertionSort(t *testing.T) {
-	tests := []struct {
-		input, sorted []int
-	}{
-		{[]int{}, []int{}},
-		{[]int{1}, []int{1}},
-		{[]int{1, 2}, []int{1, 2}},
-		{[]int{2, 1}, []int{1, 2}},
-		{[]int{2, 3, 1}, []int{1, 2, 3}},
-		{[]int{4, 2, 3, 1, 5}, []int{1, 2, 3, 4, 5}},
-	}
-	for i, test := range tests {
-		InsertionSort(test.input)
-		if !slices.Equal(test.input, test.sorted) {
-			t.Fatalf("Failed test case #%d. Want %v got %v", i, test.sorted, test.input)
+var _ = DescribeTable("InsertionSort",
+	func(input []int, sorted []int) {
+		InsertionSort(input)
+		if !slices.Equal(input, sorted) {
+			Expect(input).To(Equal(sorted))
 		}
-	}
-}
+	},
+	Entry("InsertionSort #1", []int{}, []int{}),
+	Entry("InsertionSort #2", []int{1}, []int{1}),
+	Entry("InsertionSort #3", []int{1, 2}, []int{1, 2}),
+	Entry("InsertionSort #4", []int{2, 1}, []int{1, 2}),
+	Entry("InsertionSort #5", []int{2, 3, 1}, []int{1, 2, 3}),
+	Entry("InsertionSort #6", []int{4, 2, 3, 1, 5}, []int{1, 2, 3, 4, 5}),
+)

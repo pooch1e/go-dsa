@@ -1,6 +1,9 @@
 package dp
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestMinDeletionsToMakePalindrome tests solution(s) with the following signature and problem description:
@@ -10,25 +13,19 @@ TestMinDeletionsToMakePalindrome tests solution(s) with the following signature 
 Given a string like abccb return the minimum number of character deletions that can be done on the string
 to make it a palindrome like 1 (by removing a, we will have bccb).
 */
-func TestMinDeletionsToMakePalindrome(t *testing.T) {
-	tests := []struct {
-		input                           string
-		minChangeNeededToMakePalindrome int
-	}{
-		{"", 0},
-		{"a", 0},
-		{"ab", 1},
-		{"acb", 2},
-		{"abccb", 1},
-		{"abcba", 0},
-		{"abdcba", 1},
-		{"abdecba", 2},
-		{"zabdecbaz", 2},
-	}
-
-	for i, test := range tests {
-		if got := MinDeletionsToMakePalindrome(test.input); got != test.minChangeNeededToMakePalindrome {
-			t.Fatalf("Failed test case #%d. Want %d got %d", i, test.minChangeNeededToMakePalindrome, got)
+var _ = DescribeTable("MinDeletionsToMakePalindrome",
+	func(input string, minChangeNeededToMakePalindrome int) {
+		if got := MinDeletionsToMakePalindrome(input); got != minChangeNeededToMakePalindrome {
+			Expect(got).To(Equal(minChangeNeededToMakePalindrome))
 		}
-	}
-}
+	},
+	Entry("MinDeletionsToMakePalindrome #1", "", 0),
+	Entry("MinDeletionsToMakePalindrome #2", "a", 0),
+	Entry("MinDeletionsToMakePalindrome #3", "ab", 1),
+	Entry("MinDeletionsToMakePalindrome #4", "acb", 2),
+	Entry("MinDeletionsToMakePalindrome #5", "abccb", 1),
+	Entry("MinDeletionsToMakePalindrome #6", "abcba", 0),
+	Entry("MinDeletionsToMakePalindrome #7", "abdcba", 1),
+	Entry("MinDeletionsToMakePalindrome #8", "abdecba", 2),
+	Entry("MinDeletionsToMakePalindrome #9", "zabdecbaz", 2),
+)

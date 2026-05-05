@@ -1,9 +1,11 @@
 package heap
 
 import (
-	"container/heap"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
+	containerheap "container/heap"
 	"slices"
-	"testing"
 )
 
 /*
@@ -24,32 +26,27 @@ For example given {1,4,5,-2,4,6} and k=3, we will have the following windows:
 
 So return {5,5,5,6}.
 */
-func TestMaxSlidingWindow(t *testing.T) {
-	tests := []struct {
-		numbers    []int
-		k          int
-		maxSliding []int
-	}{
-		{[]int{}, 2, []int{}},
-		{[]int{1, 4, 5, -2, 4, 6}, 1, []int{1, 4, 5, -2, 4, 6}},
-		{[]int{1, 4, 5, -2, 4, 6}, 2, []int{4, 5, 5, 4, 6}},
-		{[]int{1, 4, 5, -2, 4, 6}, 3, []int{5, 5, 5, 6}},
-		{[]int{1, 4, 5, -2, 4, 6}, 4, []int{5, 5, 6}},
-		{[]int{1, 4, 5, -2, 4, 6}, 6, []int{6}},
-	}
-
-	for i, test := range tests {
-		if got := MaxSlidingWindow(test.numbers, test.k); !slices.Equal(got, test.maxSliding) {
-			t.Fatalf("Failed test case #%d. Want %d got %d", i, test.maxSliding, got)
+var _ = DescribeTable("MaxSlidingWindow",
+	func(numbers []int, k int, maxSliding []int) {
+		if got := MaxSlidingWindow(numbers, k); !slices.Equal(got, maxSliding) {
+			Expect(got).To(Equal(maxSliding))
 		}
-	}
-}
+	},
+	Entry("MaxSlidingWindow #1", []int{}, 2, []int{}),
+	Entry("MaxSlidingWindow #2", []int{1, 4, 5, -2, 4, 6}, 1, []int{1, 4, 5, -2, 4, 6}),
+	Entry("MaxSlidingWindow #3", []int{1, 4, 5, -2, 4, 6}, 2, []int{4, 5, 5, 4, 6}),
+	Entry("MaxSlidingWindow #4", []int{1, 4, 5, -2, 4, 6}, 3, []int{5, 5, 5, 6}),
+	Entry("MaxSlidingWindow #5", []int{1, 4, 5, -2, 4, 6}, 4, []int{5, 5, 6}),
+	Entry("MaxSlidingWindow #6", []int{1, 4, 5, -2, 4, 6}, 6, []int{6}),
+)
 
-func TestMaxSlidingWindowPop(t *testing.T) {
-	pq := make(slidingWindow, 5)
-	heap.Init(&pq)
-	heap.Push(&pq, 5)
-	if got := heap.Pop(&pq).(int); got != 5 {
-		t.Fatalf("Wanted %d got %d", got, 5)
-	}
-}
+var _ = Describe("MaxSlidingWindowPop", func() {
+	It("works correctly", func() {
+		pq := make(slidingWindow, 5)
+		containerheap.Init(&pq)
+		containerheap.Push(&pq, 5)
+		if got := containerheap.Pop(&pq).(int); got != 5 {
+			Expect(5).To(Equal(got))
+		}
+	})
+})

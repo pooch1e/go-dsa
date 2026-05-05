@@ -1,6 +1,9 @@
 package recursion
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestExpressionOperators tests solution(s) with the following signature and problem description:
@@ -14,23 +17,16 @@ Only + and - operators are allowed and the are assumed to have the same priority
 
 For example given {1,5,3} and 3 return {+,-} because 1+5-3 = 3.
 */
-func TestExpressionOperators(t *testing.T) {
-	tests := []struct {
-		operands  []int
-		target    int
-		operators string
-	}{
-		{[]int{}, 1, ""},
-		{[]int{1}, 1, ""},
-		{[]int{1, 2}, 3, "+"},
-		{[]int{1, 2, 3}, 0, "+-"},
-		{[]int{1, 5, 3}, 3, "+-"},
-		{[]int{1, 2, 3, 4, 5, 6}, 5, "+-+-+"},
-	}
-
-	for i, test := range tests {
-		if got := ExpressionOperators(test.operands, test.target); got != test.operators {
-			t.Fatalf("Failed test case #%d. Want %s got %s", i, test.operators, got)
+var _ = DescribeTable("ExpressionOperators",
+	func(operands []int, target int, operators string) {
+		if got := ExpressionOperators(operands, target); got != operators {
+			Expect(got).To(Equal(operators))
 		}
-	}
-}
+	},
+	Entry("ExpressionOperators #1", []int{}, 1, ""),
+	Entry("ExpressionOperators #2", []int{1}, 1, ""),
+	Entry("ExpressionOperators #3", []int{1, 2}, 3, "+"),
+	Entry("ExpressionOperators #4", []int{1, 2, 3}, 0, "+-"),
+	Entry("ExpressionOperators #5", []int{1, 5, 3}, 3, "+-"),
+	Entry("ExpressionOperators #6", []int{1, 2, 3, 4, 5, 6}, 5, "+-+-+"),
+)

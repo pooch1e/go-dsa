@@ -1,6 +1,9 @@
 package tree
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestBalancedBinarySearchTree tests solution(s) with the following signature and problem description:
@@ -23,25 +26,19 @@ Given a sorted slice of integers like return a string representing the integers 
 
 For example given return a *BinaryTreeNode that is the root element of the above tree.
 */
-func TestBalancedBinarySearchTree(t *testing.T) {
-	tests := []struct {
-		numbers []int
-		tree    string
-	}{
-		{[]int{}, ""},
-		{[]int{1}, "1"},
-		{[]int{1, 2}, "2,1"},
-		{[]int{1, 2, 3}, "2,1,3"},
-		{[]int{1, 2, 3, 4}, "3,2,4,1"},
-		{[]int{1, 2, 3, 4, 5}, "3,2,5,1,nil,4"},
-		{[]int{1, 2, 3, 4, 6}, "3,2,6,1,nil,4"},
-		{[]int{1, 2, 3, 4, 6, 7}, "4,2,7,1,3,6"},
-		{[]int{1, 2, 3, 4, 6, 7, 8}, "4,2,7,1,3,6,8"},
-	}
-
-	for i, test := range tests {
-		if got := Serialize(BalancedBinarySearchTree(test.numbers)); got != test.tree {
-			t.Fatalf("Failed test case #%d. Want %q got %q", i, test.tree, got)
+var _ = DescribeTable("BalancedBinarySearchTree",
+	func(numbers []int, tree string) {
+		if got := Serialize(BalancedBinarySearchTree(numbers)); got != tree {
+			Expect(got).To(Equal(tree))
 		}
-	}
-}
+	},
+	Entry("BalancedBinarySearchTree #1", []int{}, ""),
+	Entry("BalancedBinarySearchTree #2", []int{1}, "1"),
+	Entry("BalancedBinarySearchTree #3", []int{1, 2}, "2,1"),
+	Entry("BalancedBinarySearchTree #4", []int{1, 2, 3}, "2,1,3"),
+	Entry("BalancedBinarySearchTree #5", []int{1, 2, 3, 4}, "3,2,4,1"),
+	Entry("BalancedBinarySearchTree #6", []int{1, 2, 3, 4, 5}, "3,2,5,1,nil,4"),
+	Entry("BalancedBinarySearchTree #7", []int{1, 2, 3, 4, 6}, "3,2,6,1,nil,4"),
+	Entry("BalancedBinarySearchTree #8", []int{1, 2, 3, 4, 6, 7}, "4,2,7,1,3,6"),
+	Entry("BalancedBinarySearchTree #9", []int{1, 2, 3, 4, 6, 7, 8}, "4,2,7,1,3,6,8"),
+)

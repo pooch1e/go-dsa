@@ -1,6 +1,9 @@
 package stack
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestLongestValidParentheses tests solution(s) with the following signature and problem description:
@@ -12,27 +15,21 @@ parentheses substring.
 
 For example given "(()", return 2 because the longest valid parentheses substring is "()".
 */
-func TestLongestValidParentheses(t *testing.T) {
-	tests := []struct {
-		input                   string
-		longestValidParentheses int
-	}{
-		{"", 0},
-		{"(", 0},
-		{"()", 2},
-		{"())", 2},
-		{"(()", 2},
-		{"((()", 2},
-		{"((())", 4},
-		{"()(()", 2},
-		{"((())()", 6},
-		{"((())()(((", 6},
-		{"))((())()(((", 6},
-	}
-
-	for i, test := range tests {
-		if got := LongestValidParentheses(test.input); got != test.longestValidParentheses {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.longestValidParentheses, got)
+var _ = DescribeTable("LongestValidParentheses",
+	func(input string, longestValidParentheses int) {
+		if got := LongestValidParentheses(input); got != longestValidParentheses {
+			Expect(got).To(Equal(longestValidParentheses))
 		}
-	}
-}
+	},
+	Entry("LongestValidParentheses #1", "", 0),
+	Entry("LongestValidParentheses #2", "(", 0),
+	Entry("LongestValidParentheses #3", "()", 2),
+	Entry("LongestValidParentheses #4", "())", 2),
+	Entry("LongestValidParentheses #5", "(()", 2),
+	Entry("LongestValidParentheses #6", "((()", 2),
+	Entry("LongestValidParentheses #7", "((())", 4),
+	Entry("LongestValidParentheses #8", "()(()", 2),
+	Entry("LongestValidParentheses #9", "((())()", 6),
+	Entry("LongestValidParentheses #10", "((())()(((", 6),
+	Entry("LongestValidParentheses #11", "))((())()(((", 6),
+)

@@ -1,8 +1,10 @@
 package backtracking
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"reflect"
-	"testing"
 )
 
 type boardAndSolution struct {
@@ -20,20 +22,22 @@ board and 0 representing an empty slot that needs to be filled, write a function
 that solves the board such that the values in each row, column and each of
 the 9 3x3 sub-grids are unique.
 */
-func TestSudoku(t *testing.T) {
-	tests := []boardAndSolution{
-		testBoard1(),
-		testBoard2(),
-		testBoard3(),
-		testBoard4(),
-	}
-
-	for i, test := range tests {
-		if Sudoku(test.board); !reflect.DeepEqual(test.solution, test.board) {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.solution, test.board)
+var _ = Describe("Sudoku", func() {
+	It("works correctly", func() {
+		tests := []boardAndSolution{
+			testBoard1(),
+			testBoard2(),
+			testBoard3(),
+			testBoard4(),
 		}
-	}
-}
+
+		for i, test := range tests {
+			if Sudoku(test.board); !reflect.DeepEqual(test.solution, test.board) {
+				Expect(test.solution, test.board).To(Equal(i))
+			}
+		}
+	})
+})
 
 func testBoard1() boardAndSolution {
 	return boardAndSolution{

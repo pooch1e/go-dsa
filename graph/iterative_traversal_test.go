@@ -1,8 +1,10 @@
 package graph
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -17,30 +19,24 @@ TestIterativeTraversal tests solution(s) with the following signature and proble
 Implement BFS and DFS on a graph without using recursion, and return the value of each vertex
 as it is visited.
 */
-func TestIterativeTraversal(t *testing.T) {
-	tests := []struct {
-		graph    [][]int
-		bfs, dfs []int
-	}{
-		{[][]int{{2, 3}, {3}, {4}, {}}, []int{1, 2, 3, 4}, []int{1, 3, 4, 2}},
-		{[][]int{{2, 3}, {4, 5}, {}, {}, {}}, []int{1, 2, 3, 4, 5}, []int{1, 3, 2, 5, 4}},
-		{[][]int{{2, 3, 4}, {3}, {4}, {5}, {}}, []int{1, 2, 3, 4, 5}, []int{1, 4, 5, 3, 2}},
-		{[][]int{{2, 3, 4}, {3, 5}, {5}, {3, 5}, {}}, []int{1, 2, 3, 4, 5}, []int{1, 4, 5, 3, 2}},
-		{readmeGraphs["Figure_1_A"], []int{1, 2, 3, 4, 5}, []int{1, 4, 3, 5, 2}},
-		// {readmeGraphs["Figure_1_B"], []int{1, 2, 3, 4, 5}, []int{1, 4, 5, 3, 2}}, TODO as visited to avoid cycles
-		{readmeGraphs["Figure_1_C"], []int{1, 2, 4, 5}, []int{1, 2, 4, 5}},
-	}
-
-	for i, test := range tests {
-		bfs, dfs := IterativeTraversal(toGraph(test.graph))
-		if !slices.Equal(bfs, test.bfs) {
-			t.Fatalf("Failed BFS test case #%d. Want %#v got %#v", i, test.bfs, bfs)
+var _ = DescribeTable("IterativeTraversal",
+	func(graph [][]int, bfs []int, dfs []int) {
+		gotBFS, gotDFS := IterativeTraversal(toGraph(graph))
+		if !slices.Equal(gotBFS, bfs) {
+			Expect(gotBFS).To(Equal(bfs))
 		}
-		if !slices.Equal(dfs, test.dfs) {
-			t.Fatalf("Failed DFS test case #%d. Want %#v got %#v", i, test.dfs, dfs)
+		if !slices.Equal(gotDFS, dfs) {
+			Expect(gotDFS).To(Equal(dfs))
 		}
-	}
-}
+	},
+	Entry("IterativeTraversal #1", [][]int{{2, 3}, {3}, {4}, {}}, []int{1, 2, 3, 4}, []int{1, 3, 4, 2}),
+	Entry("IterativeTraversal #2", [][]int{{2, 3}, {4, 5}, {}, {}, {}}, []int{1, 2, 3, 4, 5}, []int{1, 3, 2, 5, 4}),
+	Entry("IterativeTraversal #3", [][]int{{2, 3, 4}, {3}, {4}, {5}, {}}, []int{1, 2, 3, 4, 5}, []int{1, 4, 5, 3, 2}),
+	Entry("IterativeTraversal #4", [][]int{{2, 3, 4}, {3, 5}, {5}, {3, 5}, {}}, []int{1, 2, 3, 4, 5}, []int{1, 4, 5, 3, 2}),
+	Entry("IterativeTraversal #5", readmeGraphs["Figure_1_A"], []int{1, 2, 3, 4, 5}, []int{1, 4, 3, 5, 2}),
+	Entry("IterativeTraversal #6", readmeGraphs["Figure_1_B"], []int{1, 2, 3, 4, 5}, []int{1, 4, 5, 3, 2}),
+	Entry("IterativeTraversal #7", readmeGraphs["Figure_1_C"], []int{1, 2, 4, 5}, []int{1, 2, 4, 5}),
+)
 
 // toGraph converts an adjacency formatted graph into a connected collection of graph vertices.
 func toGraph(graph [][]int) []*Vertex {

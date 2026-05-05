@@ -1,9 +1,11 @@
 package graph
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"errors"
 	"slices"
-	"testing"
 )
 
 var readmeGraphs = map[string][][]int{
@@ -26,49 +28,40 @@ In a DAG the topological order returns elements such that if there's a path from
 v(j), then v(i) appears before v(j) in the ordering. Given a graph like (B) of _Figure 1_
 output the graph in topological order like {1,2,3,4}.
 */
-func TestTopologicalSort(t *testing.T) {
-	tests := []struct {
-		graph           [][]int
-		topologicalSort []int
-		expectedErr     error
-	}{
-		{[][]int{}, []int{}, nil},
-		{[][]int{{}}, []int{1}, nil},
-		{[][]int{{}, {}}, []int{1, 2}, nil},
-		{[][]int{{}, {}, {4}, {}}, []int{1, 2, 3, 4}, nil},
-		{[][]int{{}, {1}, {}, {3}}, []int{2, 4, 1, 3}, nil},
-		{[][]int{{}, {1}, {}, {3}}, []int{2, 4, 1, 3}, nil},
-		{[][]int{{2, 5}, {3, 4}, {}, {5}, {}}, []int{1, 2, 3, 4, 5}, nil},
-		{[][]int{{2}, {3}, {1}}, []int{}, ErrNotADAG},
-		{readmeGraphs["Figure_1_A"], []int{1, 2, 4, 3, 5}, nil},
-		{readmeGraphs["Figure_1_B"], []int{}, ErrNotADAG},
-		{readmeGraphs["Figure_1_C"], []int{1, 3, 2, 4, 5}, nil},
-	}
-
-	for i, test := range tests {
-		orderedGraph, err := TopologicalSort(toGraphWithIngress(test.graph))
+var _ = DescribeTable("TopologicalSort",
+	func(graph [][]int, topologicalSort []int, expectedErr error) {
+		orderedGraph, err := TopologicalSort(toGraphWithIngress(graph))
 		got := make([]int, 0, len(orderedGraph))
 		for i := range orderedGraph {
 			got = append(got, orderedGraph[i].Val.(int))
 		}
-
 		if err != nil {
-			if test.expectedErr == nil {
-				t.Fatalf("Failed test case #%d. Unexpected error. Error :%s", i, err)
+			if expectedErr == nil {
+				Expect(err).ToNot(HaveOccurred())
 			}
-			if !errors.Is(err, test.expectedErr) {
-				t.Fatalf("Failed test case #%d. Unexpected error. Want %s, Got Error :%s", i, test.expectedErr, err)
+			if !errors.Is(err, expectedErr) {
+				Expect(expectedErr, err).ToNot(HaveOccurred())
 			}
 		}
-		if err == nil && test.expectedErr != nil {
-			t.Fatalf("Failed test case #%d. Expected error %s did not occur", i, test.expectedErr)
+		if err == nil && expectedErr != nil {
+			Expect(expectedErr).ToNot(HaveOccurred())
 		}
-
-		if !slices.Equal(got, test.topologicalSort) {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.topologicalSort, got)
+		if !slices.Equal(got, topologicalSort) {
+			Expect(got).To(Equal(topologicalSort))
 		}
-	}
-}
+	},
+	Entry("TopologicalSort #1", [][]int{}, []int{}, nil),
+	Entry("TopologicalSort #2", [][]int{{}}, []int{1}, nil),
+	Entry("TopologicalSort #3", [][]int{{}, {}}, []int{1, 2}, nil),
+	Entry("TopologicalSort #4", [][]int{{}, {}, {4}, {}}, []int{1, 2, 3, 4}, nil),
+	Entry("TopologicalSort #5", [][]int{{}, {1}, {}, {3}}, []int{2, 4, 1, 3}, nil),
+	Entry("TopologicalSort #6", [][]int{{}, {1}, {}, {3}}, []int{2, 4, 1, 3}, nil),
+	Entry("TopologicalSort #7", [][]int{{2, 5}, {3, 4}, {}, {5}, {}}, []int{1, 2, 3, 4, 5}, nil),
+	Entry("TopologicalSort #8", [][]int{{2}, {3}, {1}}, []int{}, ErrNotADAG),
+	Entry("TopologicalSort #9", readmeGraphs["Figure_1_A"], []int{1, 2, 4, 3, 5}, nil),
+	Entry("TopologicalSort #10", readmeGraphs["Figure_1_B"], []int{}, ErrNotADAG),
+	Entry("TopologicalSort #11", readmeGraphs["Figure_1_C"], []int{1, 3, 2, 4, 5}, nil),
+)
 
 func toGraphWithIngress(graph [][]int) []*VertexWithIngress {
 	graphMap := make(map[int]*VertexWithIngress)

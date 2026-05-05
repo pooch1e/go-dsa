@@ -1,8 +1,10 @@
 package tree
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -25,27 +27,22 @@ For example given the above tree as "4,2,6,1,3,5,7" return:
 	pre-order traversal as [4,2,1,3,6,5,7],
 	post-order traversal as [1,3,2,5,7,6,4].
 */
-func TestTraverseBinaryTree(t *testing.T) {
-	tests := []struct {
-		tree          string
-		in, pre, post []int
-	}{
-		{"", []int{}, []int{}, []int{}},
-		{"1", []int{1}, []int{1}, []int{1}},
-		{"4,2,6,1,3,5,7", []int{1, 2, 3, 4, 5, 6, 7}, []int{4, 2, 1, 3, 6, 5, 7}, []int{1, 3, 2, 5, 7, 6, 4}},
-		{"3,1,2", []int{1, 3, 2}, []int{3, 1, 2}, []int{1, 2, 3}},
-		{"4,2,6,nil,3,5", []int{2, 3, 4, 5, 6}, []int{4, 2, 3, 6, 5}, []int{3, 2, 5, 6, 4}},
-	}
-	for i, test := range tests {
-		gotIn, gotPre, gotPost := TraverseBinaryTree(Deserialize(test.tree))
-		if !slices.Equal(gotIn, test.in) {
-			t.Fatalf("Failed in-order test case #%d.  Want %#v got %#v", i, test.in, gotIn)
+var _ = DescribeTable("TraverseBinaryTree",
+	func(tree string, in []int, pre []int, post []int) {
+		gotIn, gotPre, gotPost := TraverseBinaryTree(Deserialize(tree))
+		if !slices.Equal(gotIn, in) {
+			Expect(gotIn).To(Equal(in))
 		}
-		if !slices.Equal(gotPre, test.pre) {
-			t.Fatalf("Failed pre-order test case #%d. Want %#v got %#v", i, test.pre, gotPre)
+		if !slices.Equal(gotPre, pre) {
+			Expect(gotPre).To(Equal(pre))
 		}
-		if !slices.Equal(gotPost, test.post) {
-			t.Fatalf("Failed post-order test case #%d. Want %#v got %#v", i, test.post, gotPost)
+		if !slices.Equal(gotPost, post) {
+			Expect(gotPost).To(Equal(post))
 		}
-	}
-}
+	},
+	Entry("TraverseBinaryTree #1", "", []int{}, []int{}, []int{}),
+	Entry("TraverseBinaryTree #2", "1", []int{1}, []int{1}, []int{1}),
+	Entry("TraverseBinaryTree #3", "4,2,6,1,3,5,7", []int{1, 2, 3, 4, 5, 6, 7}, []int{4, 2, 1, 3, 6, 5, 7}, []int{1, 3, 2, 5, 7, 6, 4}),
+	Entry("TraverseBinaryTree #4", "3,1,2", []int{1, 3, 2}, []int{3, 1, 2}, []int{1, 2, 3}),
+	Entry("TraverseBinaryTree #5", "4,2,6,nil,3,5", []int{2, 3, 4, 5, 6}, []int{4, 2, 3, 6, 5}, []int{3, 2, 5, 6, 4}),
+)

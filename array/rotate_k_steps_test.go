@@ -1,8 +1,10 @@
 package array
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -18,23 +20,16 @@ After 1 rotation: {3,1,2}.
 After 2 rotations: {2,3,1}.
 After 3 rotations: {1,2,3}.
 */
-func TestRotateKSteps(t *testing.T) {
-	tests := []struct {
-		list        []int
-		steps       int
-		rotatedList []int
-	}{
-		{[]int{}, 0, []int{}},
-		{[]int{1, 2, 3}, 1, []int{3, 1, 2}},
-		{[]int{1, 2, 3}, 2, []int{2, 3, 1}},
-		{[]int{1, 2, 3}, 3, []int{1, 2, 3}},
-		{[]int{1, 2, 3, 4, 5}, 2, []int{4, 5, 1, 2, 3}},
-	}
-
-	for i, test := range tests {
-		RotateKSteps(test.list, test.steps)
-		if !slices.Equal(test.list, test.rotatedList) {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.rotatedList, test.list)
+var _ = DescribeTable("RotateKSteps",
+	func(list []int, steps int, rotatedList []int) {
+		RotateKSteps(list, steps)
+		if !slices.Equal(list, rotatedList) {
+			Expect(list).To(Equal(rotatedList))
 		}
-	}
-}
+	},
+	Entry("RotateKSteps #1", []int{}, 0, []int{}),
+	Entry("RotateKSteps #2", []int{1, 2, 3}, 1, []int{3, 1, 2}),
+	Entry("RotateKSteps #3", []int{1, 2, 3}, 2, []int{2, 3, 1}),
+	Entry("RotateKSteps #4", []int{1, 2, 3}, 3, []int{1, 2, 3}),
+	Entry("RotateKSteps #5", []int{1, 2, 3, 4, 5}, 2, []int{4, 5, 1, 2, 3}),
+)

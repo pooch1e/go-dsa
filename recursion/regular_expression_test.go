@@ -1,6 +1,9 @@
 package recursion
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestRegularExpressions tests solution(s) with the following signature and problem description:
@@ -17,33 +20,27 @@ Write a recursive function to return true if the input matches the pattern and f
 For example given input `aa` and pattern `a*` the algorithm should return true, but given the same
 pattern and "ba" it should return false.
 */
-func TestRegularExpressions(t *testing.T) {
-	tests := []struct {
-		input, pattern string
-		match          bool
-	}{
-		{"", "", true},
-		{"", "*", false},
-		{"a", "", false},
-		{"a", ".", true},
-		{"a", "*", false},
-		{"aa", "*", false},
-		{"aa", "*a", false},
-		{"aa", "a*", true},
-		{"ba", "a*", false},
-		{"aa", ".", false},
-		{"ab", ".", false},
-		{"ad", "d", false},
-		{"ad", ".d", true},
-		{"da", "*d", false},
-		{"da", ".*", true},
-		{"ad", "d", false},
-		{"abdef", "*d*", false},
-	}
-
-	for i, test := range tests {
-		if got := IsRegularExpressionMatch(test.input, test.pattern); got != test.match {
-			t.Errorf("Failed test case %d. Want %t got %t", i, test.match, got)
+var _ = DescribeTable("RegularExpressions",
+	func(input string, pattern string, match bool) {
+		if got := IsRegularExpressionMatch(input, pattern); got != match {
+			Expect(got).To(Equal(match))
 		}
-	}
-}
+	},
+	Entry("RegularExpressions #1", "", "", true),
+	Entry("RegularExpressions #2", "", "*", false),
+	Entry("RegularExpressions #3", "a", "", false),
+	Entry("RegularExpressions #4", "a", ".", true),
+	Entry("RegularExpressions #5", "a", "*", false),
+	Entry("RegularExpressions #6", "aa", "*", false),
+	Entry("RegularExpressions #7", "aa", "*a", false),
+	Entry("RegularExpressions #8", "aa", "a*", true),
+	Entry("RegularExpressions #9", "ba", "a*", false),
+	Entry("RegularExpressions #10", "aa", ".", false),
+	Entry("RegularExpressions #11", "ab", ".", false),
+	Entry("RegularExpressions #12", "ad", "d", false),
+	Entry("RegularExpressions #13", "ad", ".d", true),
+	Entry("RegularExpressions #14", "da", "*d", false),
+	Entry("RegularExpressions #15", "da", ".*", true),
+	Entry("RegularExpressions #16", "ad", "d", false),
+	Entry("RegularExpressions #17", "abdef", "*d*", false),
+)

@@ -1,8 +1,10 @@
 package array
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -19,21 +21,15 @@ For example given {1,2,3,4}, return {24,12,8,6} because:
 * 8=1*2*4.
 * 6=1*2*3.
 */
-func TestProductOfAllOtherElements(t *testing.T) {
-	tests := []struct {
-		list     []int
-		products []int
-	}{
-		{[]int{}, []int{}},
-		{[]int{2, 3}, []int{3, 2}},
-		{[]int{1, 2, 3}, []int{6, 3, 2}},
-		{[]int{1, 2, 3, 4}, []int{24, 12, 8, 6}},
-		{[]int{1, 2, 3, 4, 5}, []int{120, 60, 40, 30, 24}},
-	}
-
-	for i, test := range tests {
-		if got := ProductOfAllOtherElements(test.list); !slices.Equal(got, test.products) {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.products, got)
+var _ = DescribeTable("ProductOfAllOtherElements",
+	func(list []int, products []int) {
+		if got := ProductOfAllOtherElements(list); !slices.Equal(got, products) {
+			Expect(got).To(Equal(products))
 		}
-	}
-}
+	},
+	Entry("ProductOfAllOtherElements #1", []int{}, []int{}),
+	Entry("ProductOfAllOtherElements #2", []int{2, 3}, []int{3, 2}),
+	Entry("ProductOfAllOtherElements #3", []int{1, 2, 3}, []int{6, 3, 2}),
+	Entry("ProductOfAllOtherElements #4", []int{1, 2, 3, 4}, []int{24, 12, 8, 6}),
+	Entry("ProductOfAllOtherElements #5", []int{1, 2, 3, 4, 5}, []int{120, 60, 40, 30, 24}),
+)

@@ -1,8 +1,10 @@
 package stack
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -18,24 +20,18 @@ is equivalent of (1*2) + 3 + (4*5).
 
 For example given 1*2+3+4*5, return 1 2 * 3 + 4 5 * which both evaluate to 25.
 */
-func TestInfixToPostfix(t *testing.T) {
-	tests := []struct {
-		infix   []string
-		postfix []string
-	}{
-		{[]string{""}, []string{""}},
-		{[]string{"a", "+", "b"}, []string{"a", "b", "+"}},
-		{[]string{"a", "-", "b", "+", "c"}, []string{"a", "b", "c", "+", "-"}},
-		{[]string{"a", "-", "(", "b", "+", "c", ")"}, []string{"a", "b", "c", "+", "-"}},
-		{[]string{"a", "+", "b", "-", "c"}, []string{"a", "b", "c", "-", "+"}},
-		{[]string{"a", "/", "b"}, []string{"a", "b", "/"}},
-		{[]string{"1", "*", "2", "+", "3", "+", "4", "*", "5"}, []string{"1", "2", "3", "4", "5", "*", "+", "+", "*"}},
-		{[]string{"1", "*", "(", "2", "+", "3", ")", "+", "4", "*", "5"}, []string{"1", "2", "3", "+", "4", "5", "*", "+", "*"}},
-	}
-
-	for i, test := range tests {
-		if got := InfixToPostfix(test.infix); !slices.Equal(got, test.postfix) {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.postfix, got)
+var _ = DescribeTable("InfixToPostfix",
+	func(infix []string, postfix []string) {
+		if got := InfixToPostfix(infix); !slices.Equal(got, postfix) {
+			Expect(got).To(Equal(postfix))
 		}
-	}
-}
+	},
+	Entry("InfixToPostfix #1", []string{""}, []string{""}),
+	Entry("InfixToPostfix #2", []string{"a", "+", "b"}, []string{"a", "b", "+"}),
+	Entry("InfixToPostfix #3", []string{"a", "-", "b", "+", "c"}, []string{"a", "b", "c", "+", "-"}),
+	Entry("InfixToPostfix #4", []string{"a", "-", "(", "b", "+", "c", ")"}, []string{"a", "b", "c", "+", "-"}),
+	Entry("InfixToPostfix #5", []string{"a", "+", "b", "-", "c"}, []string{"a", "b", "c", "-", "+"}),
+	Entry("InfixToPostfix #6", []string{"a", "/", "b"}, []string{"a", "b", "/"}),
+	Entry("InfixToPostfix #7", []string{"1", "*", "2", "+", "3", "+", "4", "*", "5"}, []string{"1", "2", "3", "4", "5", "*", "+", "+", "*"}),
+	Entry("InfixToPostfix #8", []string{"1", "*", "(", "2", "+", "3", ")", "+", "4", "*", "5"}, []string{"1", "2", "3", "+", "4", "5", "*", "+", "*"}),
+)

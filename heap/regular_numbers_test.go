@@ -1,8 +1,10 @@
 package heap
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -24,24 +26,18 @@ For example given n=4:
 
 So the first 3 regular numbers are {1, 2, 3, 4}.
 */
-func TestRegularNumbers(t *testing.T) {
-	tests := []struct {
-		n              int
-		regularNumbers []int
-	}{
-		{0, []int{}},
-		{1, []int{1}},
-		{2, []int{1, 2}},
-		{3, []int{1, 2, 3}},
-		{4, []int{1, 2, 3, 4}},
-		{5, []int{1, 2, 3, 4, 5}},
-		{10, []int{1, 2, 3, 4, 5, 6, 8, 9, 10, 12}},
-		{15, []int{1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 16, 18, 20, 24}},
-	}
-
-	for i, test := range tests {
-		if got := RegularNumbers(test.n); !slices.Equal(got, test.regularNumbers) {
-			t.Fatalf("Failed test case #%d. Want %v got %d", i, test.regularNumbers, got)
+var _ = DescribeTable("RegularNumbers",
+	func(n int, regularNumbers []int) {
+		if got := RegularNumbers(n); !slices.Equal(got, regularNumbers) {
+			Expect(got).To(Equal(regularNumbers))
 		}
-	}
-}
+	},
+	Entry("RegularNumbers #1", 0, []int{}),
+	Entry("RegularNumbers #2", 1, []int{1}),
+	Entry("RegularNumbers #3", 2, []int{1, 2}),
+	Entry("RegularNumbers #4", 3, []int{1, 2, 3}),
+	Entry("RegularNumbers #5", 4, []int{1, 2, 3, 4}),
+	Entry("RegularNumbers #6", 5, []int{1, 2, 3, 4, 5}),
+	Entry("RegularNumbers #7", 10, []int{1, 2, 3, 4, 5, 6, 8, 9, 10, 12}),
+	Entry("RegularNumbers #8", 15, []int{1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 16, 18, 20, 24}),
+)

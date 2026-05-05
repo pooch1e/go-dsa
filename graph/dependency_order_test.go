@@ -1,9 +1,11 @@
 package graph
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"errors"
 	"strings"
-	"testing"
 )
 
 const (
@@ -33,23 +35,9 @@ Means that a depends on b, c, d; b depends on c; d depends on e, f.
 The output should be f,e,c,d,b,a. Note that the order of the elements in the output is not
 important, but the order of the dependencies is important.
 */
-func TestDependencyOrder(t *testing.T) {
-	tests := []struct {
-		input       string
-		order       string
-		expectedErr error
-	}{
-		{"", "", nil},
-		{"a,b", "b,a", nil},
-		{"a,b,c\nc,a", "", ErrNotADAG},
-		{"a,b,c,d\nb,c\nd,e,f", "f,e,c,d,b,a", nil},
-		{"a,f\nb,f\nc,f\nd,f\ne,f", "f,e,d,c,b,a", nil},
-		{"a,f\nb,f\nc,f\nd,f\ne,f\nf,g\ng,h", "h,g,f,e,d,c,b,a", nil},
-		{"a,f\nb,f\nc,f\nd,f\ne,f\nf,g\ng,h\nd,h", "h,g,f,e,d,c,b,a", nil},
-	}
-
-	for i, test := range tests {
-		orderedGraph, err := DependencyOrder(toDependencyGraph(test.input))
+var _ = DescribeTable("DependencyOrder",
+	func(input string, order string, expectedErr error) {
+		orderedGraph, err := DependencyOrder(toDependencyGraph(input))
 		got := ""
 		for i := range orderedGraph {
 			got += orderedGraph[i].Val.(string) + delimiter
@@ -57,24 +45,29 @@ func TestDependencyOrder(t *testing.T) {
 		if len(orderedGraph) > 0 {
 			got = strings.TrimSuffix(got, delimiter)
 		}
-
 		if err != nil {
-			if test.expectedErr == nil {
-				t.Fatalf("Failed test case #%d. Unexpected error. Error :%s", i, err)
+			if expectedErr == nil {
+				Expect(err).ToNot(HaveOccurred())
 			}
-			if !errors.Is(err, test.expectedErr) {
-				t.Fatalf("Failed test case #%d. Unexpected error. Want %s, Got Error :%s", i, test.expectedErr, err)
+			if !errors.Is(err, expectedErr) {
+				Expect(expectedErr, err).ToNot(HaveOccurred())
 			}
 		}
-		if err == nil && test.expectedErr != nil {
-			t.Fatalf("Failed test case #%d. Expected error %s did not occur", i, test.expectedErr)
+		if err == nil && expectedErr != nil {
+			Expect(expectedErr).ToNot(HaveOccurred())
 		}
-
-		if got != test.order {
-			t.Fatalf("Failed test case #%d. Want %s got %s", i, test.order, got)
+		if got != order {
+			Expect(got).To(Equal(order))
 		}
-	}
-}
+	},
+	Entry("DependencyOrder #1", "", "", nil),
+	Entry("DependencyOrder #2", "a,b", "b,a", nil),
+	Entry("DependencyOrder #3", "a,b,c\nc,a", "", ErrNotADAG),
+	Entry("DependencyOrder #4", "a,b,c,d\nb,c\nd,e,f", "f,e,c,d,b,a", nil),
+	Entry("DependencyOrder #5", "a,f\nb,f\nc,f\nd,f\ne,f", "f,e,d,c,b,a", nil),
+	Entry("DependencyOrder #6", "a,f\nb,f\nc,f\nd,f\ne,f\nf,g\ng,h", "h,g,f,e,d,c,b,a", nil),
+	Entry("DependencyOrder #7", "a,f\nb,f\nc,f\nd,f\ne,f\nf,g\ng,h\nd,h", "h,g,f,e,d,c,b,a", nil),
+)
 
 func toDependencyGraph(input string) []*VertexWithIngress {
 	graph := []*VertexWithIngress{}

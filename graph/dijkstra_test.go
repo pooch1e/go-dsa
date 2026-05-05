@@ -1,6 +1,10 @@
 package graph
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+
+	"fmt"
+)
 
 type dijkstraTestCase struct {
 	graph     []*dijkstraVertex
@@ -34,40 +38,42 @@ field of the node.
 
 For the above graph, the shortest paths for each node are {0, 1, 3, 5, 8}.
 */
-func TestDijkstra(t *testing.T) {
-	tests := []*dijkstraTestCase{
-		{
-			graph:     newGraph(2),
-			distances: []int{0, 10},
-		},
-		{
-			graph:     newGraph(5),
-			distances: []int{0, 1, 3, 5, 8},
-		},
-		{
-			graph:     newGraph(4),
-			distances: []int{0, 5, 3, 10},
-		},
-		{
-			graph:     newGraph(3),
-			distances: []int{0, 3, 5},
-		},
-		{
-			graph:     newGraph(6),
-			distances: []int{0, 1, 3, 4, 6, 10},
-		},
-	}
-	addEdges(tests)
+var _ = Describe("Dijkstra", func() {
+	It("works correctly", func() {
+		tests := []*dijkstraTestCase{
+			{
+				graph:     newGraph(2),
+				distances: []int{0, 10},
+			},
+			{
+				graph:     newGraph(5),
+				distances: []int{0, 1, 3, 5, 8},
+			},
+			{
+				graph:     newGraph(4),
+				distances: []int{0, 5, 3, 10},
+			},
+			{
+				graph:     newGraph(3),
+				distances: []int{0, 3, 5},
+			},
+			{
+				graph:     newGraph(6),
+				distances: []int{0, 1, 3, 4, 6, 10},
+			},
+		}
+		addEdges(tests)
 
-	for i, test := range tests {
-		Dijkstra(test.graph, test.graph[0])
-		for j, v := range test.graph {
-			if v.distance != test.distances[j] {
-				t.Errorf("Test Case %d, Vertex %d distance: got %d, expected %d", i, v.val, v.distance, test.distances[j])
+		for i, test := range tests {
+			Dijkstra(test.graph, test.graph[0])
+			for j, v := range test.graph {
+				if v.distance != test.distances[j] {
+					Fail(fmt.Sprintf("Test Case %d, Vertex %d distance: got %d, expected %d", i, v.val, v.distance, test.distances[j]))
+				}
 			}
 		}
-	}
-}
+	})
+})
 
 func newGraph(edges int) []*dijkstraVertex {
 	graph := make([]*dijkstraVertex, edges)

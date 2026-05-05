@@ -1,6 +1,9 @@
 package strings
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestFindDuplicate tests solution(s) with the following signature and problem description:
@@ -29,29 +32,23 @@ one two one one.
 The third output (two ones) reads the level before it which is 11. Two ones means repeat
 1 two times i.e. 11.
 */
-func TestFindDuplicate(t *testing.T) {
-	tests := []struct {
-		depth    int
-		lastLine string
-	}{
-		{0, "-1"},
-		{1, "1"},
-		{2, "11"},
-		{3, "21"},
-		{4, "1211"},
-		{5, "111221"},
-		{6, "312211"},
-		{7, "13112221"},
-		{8, "1113213211"},
-		{9, "31131211131221"},
-		{10, "13211311123113112211"},
-	}
-
-	for i, test := range tests {
-		tell := LookAndTell(test.depth)
+var _ = DescribeTable("FindDuplicate",
+	func(depth int, lastLine string) {
+		tell := LookAndTell(depth)
 		got := tell[len(tell)-1]
-		if got != test.lastLine {
-			t.Fatalf("Failed test case #%d. Want %q got %q", i, test.lastLine, got)
+		if got != lastLine {
+			Expect(got).To(Equal(lastLine))
 		}
-	}
-}
+	},
+	Entry("FindDuplicate #1", 0, "-1"),
+	Entry("FindDuplicate #2", 1, "1"),
+	Entry("FindDuplicate #3", 2, "11"),
+	Entry("FindDuplicate #4", 3, "21"),
+	Entry("FindDuplicate #5", 4, "1211"),
+	Entry("FindDuplicate #6", 5, "111221"),
+	Entry("FindDuplicate #7", 6, "312211"),
+	Entry("FindDuplicate #8", 7, "13112221"),
+	Entry("FindDuplicate #9", 8, "1113213211"),
+	Entry("FindDuplicate #10", 9, "31131211131221"),
+	Entry("FindDuplicate #11", 10, "13211311123113112211"),
+)

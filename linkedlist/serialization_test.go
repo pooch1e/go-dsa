@@ -1,6 +1,11 @@
 package linkedlist
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
+	"fmt"
+)
 
 /*
 TestSerializeAndDeserializeLinkedList tests solution(s) with the following signature and problem description:
@@ -27,23 +32,23 @@ node2.Next = node3
 A string representation of this linked-list should look like 1->2->3. This means that
 the node with value 1 is connected to node with value 2, and node with value 2 is connected to node with value 3.
 */
-func TestSerializeAndDeserializeLinkedList(t *testing.T) {
-	tests := []string{
-		"",
-		"1",
-		"1->2",
-		"1->2->3->4->2->1",
-	}
-	for i, test := range tests {
+var _ = DescribeTable("SerializeAndDeserializeLinkedList",
+	func(test string) {
 		got := Serialize(Deserialize(test))
 		if got != test {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test, got)
+			Expect(got).To(Equal(test))
 		}
-	}
-}
+	},
+	Entry("SerializeAndDeserializeLinkedList #1", ""),
+	Entry("SerializeAndDeserializeLinkedList #2", "1"),
+	Entry("SerializeAndDeserializeLinkedList #3", "1->2"),
+	Entry("SerializeAndDeserializeLinkedList #4", "1->2->3->4->2->1"),
+)
 
-func TestATOI(t *testing.T) {
-	if got := atoi("A"); got != -1 {
-		t.Fatalf("want %d, got %d", -1, got)
-	}
-}
+var _ = Describe("ATOI", func() {
+	It("works correctly", func() {
+		if got := atoi("A"); got != -1 {
+			Fail(fmt.Sprintf("want %d, got %d", -1, got))
+		}
+	})
+})

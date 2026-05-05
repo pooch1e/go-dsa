@@ -1,6 +1,9 @@
 package bit
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestMax tests solution(s) with the following signature and problem description:
@@ -12,21 +15,16 @@ operations like {if, switch,…}.
 
 For example given 20 and 2 return 20.
 */
-func TestMax(t *testing.T) {
-	tests := []struct {
-		a, b, max int
-	}{
-		{0, 1, 1},
-		{20, 2, 20},
-		{2, 20, 20},
-		{2, -2, 2},
-		{-3, -2, -2},
-	}
-
-	for i, test := range tests {
-		got := Max(test.a, test.b)
-		if got != test.max {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.max, got)
+var _ = DescribeTable("Max",
+	func(a int, b int, max int) {
+		got := Max(a, b)
+		if got != max {
+			Expect(got).To(Equal(max))
 		}
-	}
-}
+	},
+	Entry("Max #1", 0, 1, 1),
+	Entry("Max #2", 20, 2, 20),
+	Entry("Max #3", 2, 20, 20),
+	Entry("Max #4", 2, -2, 2),
+	Entry("Max #5", -3, -2, -2),
+)

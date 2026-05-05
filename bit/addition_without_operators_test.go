@@ -1,6 +1,9 @@
 package bit
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestAdditionWithoutArithmeticOperators tests solution(s) with the following signature and problem description:
@@ -11,21 +14,16 @@ Given two integers add them without using any arithmetic operators such as {+,-,
 
 For example given 2 and 3 return 5.
 */
-func TestAdditionWithoutArithmeticOperators(t *testing.T) {
-	tests := []struct {
-		a, b int
-	}{
-		{0, 1},
-		{20, 2},
-		{20, 4},
-		{20, 3},
-	}
-
-	for i, test := range tests {
-		got := AdditionWithoutArithmeticOperators(test.a, test.b)
-		want := test.a + test.b
+var _ = DescribeTable("AdditionWithoutArithmeticOperators",
+	func(a int, b int) {
+		got := AdditionWithoutArithmeticOperators(a, b)
+		want := a + b
 		if got != want {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, want, got)
+			Expect(got).To(Equal(want))
 		}
-	}
-}
+	},
+	Entry("AdditionWithoutArithmeticOperators #1", 0, 1),
+	Entry("AdditionWithoutArithmeticOperators #2", 20, 2),
+	Entry("AdditionWithoutArithmeticOperators #3", 20, 4),
+	Entry("AdditionWithoutArithmeticOperators #4", 20, 3),
+)

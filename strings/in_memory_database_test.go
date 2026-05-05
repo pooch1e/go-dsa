@@ -1,8 +1,10 @@
 package strings
 
 import (
-	"strings"
-	"testing"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
+	gostrings "strings"
 )
 
 /*
@@ -41,33 +43,29 @@ For example:
 
 The output is 1 because SET A 2 was never committed so the value of A remains 1.
 */
-func TestInMemoryDictionary(t *testing.T) {
-	tests := []struct {
-		input, allOutputs string
-	}{
-		{"EXISTS A\nSET A 1\nGET A", "false 1"},
-		{"EXISTS A\nSET A 1\nGET A\nEXISTS A\nUNSET A\nGET A\nEXISTS A", "false 1 true nil false"},
-		{"GET A\nBEGIN\nSET A 1\nGET A\nROLLBACK\nGET A", "nil 1 nil"},
-		{"GET A\nBEGIN\nSET A 1\nGET A\nCOMMIT\nGET A", "nil 1 1"},
-		{"BEGIN\nSET A 1\nCOMMIT\nBEGIN\nSET A 2\nROLLBACK\nGET A", "1"},
-		{"SET A 1\nGET A\nBEGIN\nSET A 2\nGET A\nBEGIN\nUNSET A\nGET A\nCOMMIT\nROLLBACK\nGET A", "1 2 nil 1"},
-		{"SET A 2\nGET A\nBEGIN\nSET A 1\nGET A\nCOMMIT\nGET A\nBEGIN\nSET A 2\nGET A\nROLLBACK\nGET A", "2 1 1 2 1"},
-	}
-
-	for i, test := range tests {
-		allOutputs := ""
+var _ = DescribeTable("InMemoryDictionary",
+	func(input string, allOutputs string) {
+		got := ""
 		dbs = make([]map[string]string, 0)
 		dbs = append(dbs, make(map[string]string))
-		for _, cmd := range strings.Split(test.input, "\n") {
+		for _, cmd := range gostrings.Split(input, "\n") {
 			output := RunDBCommand(cmd)
 			if output != "" {
-				allOutputs += " " + output
+				got += " " + output
 			}
 		}
-		allOutputs = allOutputs[1:]
-
-		if allOutputs != test.allOutputs {
-			t.Fatalf("Failed test case #%d. Want %s got %s", i, test.allOutputs, allOutputs)
+		if len(got) > 0 {
+			got = got[1:]
 		}
-	}
-}
+		if got != allOutputs {
+			Expect(got).To(Equal(allOutputs))
+		}
+	},
+	Entry("InMemoryDictionary #1", "EXISTS A\nSET A 1\nGET A", "false 1"),
+	Entry("InMemoryDictionary #2", "EXISTS A\nSET A 1\nGET A\nEXISTS A\nUNSET A\nGET A\nEXISTS A", "false 1 true nil false"),
+	Entry("InMemoryDictionary #3", "GET A\nBEGIN\nSET A 1\nGET A\nROLLBACK\nGET A", "nil 1 nil"),
+	Entry("InMemoryDictionary #4", "GET A\nBEGIN\nSET A 1\nGET A\nCOMMIT\nGET A", "nil 1 1"),
+	Entry("InMemoryDictionary #5", "BEGIN\nSET A 1\nCOMMIT\nBEGIN\nSET A 2\nROLLBACK\nGET A", "1"),
+	Entry("InMemoryDictionary #6", "SET A 1\nGET A\nBEGIN\nSET A 2\nGET A\nBEGIN\nUNSET A\nGET A\nCOMMIT\nROLLBACK\nGET A", "1 2 nil 1"),
+	Entry("InMemoryDictionary #7", "SET A 2\nGET A\nBEGIN\nSET A 1\nGET A\nCOMMIT\nGET A\nBEGIN\nSET A 2\nGET A\nROLLBACK\nGET A", "2 1 1 2 1"),
+)

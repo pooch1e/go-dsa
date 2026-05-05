@@ -1,7 +1,8 @@
 package queue
 
 import (
-	"testing"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 
 	"github.com/spring1843/go-dsa/tree"
 )
@@ -25,29 +26,24 @@ can draw a vertical line through the root and then the left subtree is the mirro
 For example given "2,4,4,5,6,6,5", shown in the symmetric tree above return true.
 Given "2,3,4,5,6,6,5", shown in the not symmetric tree above return false.
 */
-func TestIsTreeSymmetrical(t *testing.T) {
-	tests := []struct {
-		tree        string
-		isSymmetric bool
-	}{
-		{"", false},
-		{"1", true},
-		{"1,2,2", true},
-		{"1,2,3", false},
-		{"1,2,2,3,nil,nil,3", true},
-		{"1,2,nil,4", false},
-		{"1,2,3,4,nil,5,6", false},
-		{"1,2,nil,4,nil,5,6", false},
-		{"2,4,4,5,6,5,6", false},
-		{"2,4,4,5,6,6,5", true},
-	}
-	for i, test := range tests {
-		got, err := IsTreeSymmetrical(tree.Deserialize(test.tree))
+var _ = DescribeTable("IsTreeSymmetrical",
+	func(treeStr string, isSymmetric bool) {
+		got, err := IsTreeSymmetrical(tree.Deserialize(treeStr))
 		if err != nil {
-			t.Fatalf("Failed test case #%d. Unexpected error %s", i, err)
+			Expect(err).ToNot(HaveOccurred())
 		}
-		if got != test.isSymmetric {
-			t.Fatalf("Failed test case #%d. Want %t got %t", i, test.isSymmetric, got)
+		if got != isSymmetric {
+			Expect(got).To(Equal(isSymmetric))
 		}
-	}
-}
+	},
+	Entry("IsTreeSymmetrical #1", "", false),
+	Entry("IsTreeSymmetrical #2", "1", true),
+	Entry("IsTreeSymmetrical #3", "1,2,2", true),
+	Entry("IsTreeSymmetrical #4", "1,2,3", false),
+	Entry("IsTreeSymmetrical #5", "1,2,2,3,nil,nil,3", true),
+	Entry("IsTreeSymmetrical #6", "1,2,nil,4", false),
+	Entry("IsTreeSymmetrical #7", "1,2,3,4,nil,5,6", false),
+	Entry("IsTreeSymmetrical #8", "1,2,nil,4,nil,5,6", false),
+	Entry("IsTreeSymmetrical #9", "2,4,4,5,6,5,6", false),
+	Entry("IsTreeSymmetrical #10", "2,4,4,5,6,6,5", true),
+)

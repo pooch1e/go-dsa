@@ -1,6 +1,9 @@
 package stack
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestBasicCalculator tests solution(s) with the following signature and problem description:
@@ -12,33 +15,25 @@ Given an expression containing integers, parentheses and the four basic arithmet
 
 For example given 1*2+3+4*5 return 25 because (4*5) + (1*2) + 3 = 25.
 */
-func TestBasicCalculator(t *testing.T) {
-	tests := []struct {
-		expression string
-		expectErr  bool
-		outcome    float64
-	}{
-		{"", true, -1},
-		{"1++", true, -1},
-		{"1+2", false, 3},
-		{"1*(2+3)", false, 5},
-		{"1+2+3", false, 6},
-		{"1+(3-2)", false, 2},
-		{"9/3", false, 3},
-		{"3-9/3", false, 0},
-		{"1*(2+3+(4*5))", false, 25},
-		{"1*(2+3)+(4*5)", false, 25},
-		{"5.10/2", false, 2.55},
-	}
-
-	for i, test := range tests {
-		got, err := BasicCalculator(test.expression)
-		if err != nil && !test.expectErr {
-			t.Fatalf("Failed test case #%d. Did not expect an error. Error : %s", i, err)
+var _ = DescribeTable("BasicCalculator",
+	func(expression string, expectErr bool, outcome float64) {
+		got, err := BasicCalculator(expression)
+		if err != nil && !expectErr {
+			Expect(err).ToNot(HaveOccurred())
 		}
-
-		if got != test.outcome {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.outcome, got)
+		if got != outcome {
+			Expect(got).To(Equal(outcome))
 		}
-	}
-}
+	},
+	Entry("BasicCalculator #1", "", true, -1),
+	Entry("BasicCalculator #2", "1++", true, -1),
+	Entry("BasicCalculator #3", "1+2", false, 3),
+	Entry("BasicCalculator #4", "1*(2+3)", false, 5),
+	Entry("BasicCalculator #5", "1+2+3", false, 6),
+	Entry("BasicCalculator #6", "1+(3-2)", false, 2),
+	Entry("BasicCalculator #7", "9/3", false, 3),
+	Entry("BasicCalculator #8", "3-9/3", false, 0),
+	Entry("BasicCalculator #9", "1*(2+3+(4*5))", false, 25),
+	Entry("BasicCalculator #10", "1*(2+3)+(4*5)", false, 25),
+	Entry("BasicCalculator #11", "5.10/2", false, 2.55),
+)

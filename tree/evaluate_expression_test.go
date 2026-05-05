@@ -1,8 +1,10 @@
 package tree
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"strings"
-	"testing"
 )
 
 /*
@@ -22,54 +24,45 @@ the resulting evaluation of the expression.
 
 For example given "*,*,+,5,5,2,2" representing the above tree return 100 because (5 * 5) * (2 + 2) = 100.
 */
-func TestEvaluateBinaryExpressionTree(t *testing.T) {
-	tests := []struct {
-		tree        string
-		result      float64
-		expectedErr bool
-	}{
-		{"", 0.0, false},
-		{"*,6,2", 12.0, false},
-		{"/,6,2", 3.0, false},
-		{"-,6,2", 4.0, false},
-		{"+,*,6,+,2,nil,nil,3,4", 20.0, false},
-		{"*,*,+,5,5,2,2", 100.0, false}, // (D) in Figure 2
-		{"*,A,2", -1, true},
-		{"*,2,B", -1, true},
-		{"A,1,2", -1, true},
-	}
+var _ = DescribeTable("EvaluateBinaryExpressionTree",
+	func(tree string, result float64, expectedErr bool) {
+		got, err := EvaluateBinaryExpressionTree(unserializeStringBinaryTree(tree))
+		if !expectedErr && err != nil {
+			Expect(err).ToNot(HaveOccurred())
+		}
+		if expectedErr && err == nil {
+			Fail("did not get expected error")
+		}
+		if got != result {
+			Expect(got).To(Equal(result))
+		}
+	},
+	Entry("EvaluateBinaryExpressionTree #1", "", 0.0, false),
+	Entry("EvaluateBinaryExpressionTree #2", "*,6,2", 12.0, false),
+	Entry("EvaluateBinaryExpressionTree #3", "/,6,2", 3.0, false),
+	Entry("EvaluateBinaryExpressionTree #4", "-,6,2", 4.0, false),
+	Entry("EvaluateBinaryExpressionTree #5", "+,*,6,+,2,nil,nil,3,4", 20.0, false),
+	Entry("EvaluateBinaryExpressionTree #6", "*,*,+,5,5,2,2", 100.0, false),
+	Entry("EvaluateBinaryExpressionTree #7", "*,A,2", -1, true),
+	Entry("EvaluateBinaryExpressionTree #8", "*,2,B", -1, true),
+	Entry("EvaluateBinaryExpressionTree #9", "A,1,2", -1, true),
+)
 
-	for i, test := range tests {
-		got, err := EvaluateBinaryExpressionTree(unserializeStringBinaryTree(test.tree))
-		if !test.expectedErr && err != nil {
-			t.Fatalf("unexpected error: %s", err)
-		}
-		if test.expectedErr && err == nil {
-			t.Fatal("did not get expected error")
-		}
-		if got != test.result {
-			t.Fatalf("Failed test case #%d. Want %#f got %#f", i, test.result, got)
-		}
-	}
-}
-
-func TestSerializeAndUnserializeStringBinaryTree(t *testing.T) {
-	tests := []string{
-		"",
-		"1",
-		"1,2,3",
-		"1,2,nil,4",
-		"1,2,3,4,nil,5,6",
-		"1,2,nil,4,nil,5,6",
-		"a,b,nil,c,nil,d,e",
-		"+,b,nil,a,nil,c,e",
-	}
-	for i, test := range tests {
+var _ = DescribeTable("SerializeAndUnserializeStringBinaryTree",
+	func(test string) {
 		if got := serializeStringBinaryTree(unserializeStringBinaryTree(test)); got != test {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test, got)
+			Expect(got).To(Equal(test))
 		}
-	}
-}
+	},
+	Entry("SerializeAndUnserializeStringBinaryTree #1", ""),
+	Entry("SerializeAndUnserializeStringBinaryTree #2", "1"),
+	Entry("SerializeAndUnserializeStringBinaryTree #3", "1,2,3"),
+	Entry("SerializeAndUnserializeStringBinaryTree #4", "1,2,nil,4"),
+	Entry("SerializeAndUnserializeStringBinaryTree #5", "1,2,3,4,nil,5,6"),
+	Entry("SerializeAndUnserializeStringBinaryTree #6", "1,2,nil,4,nil,5,6"),
+	Entry("SerializeAndUnserializeStringBinaryTree #7", "a,b,nil,c,nil,d,e"),
+	Entry("SerializeAndUnserializeStringBinaryTree #8", "+,b,nil,a,nil,c,e"),
+)
 
 func serializeStringBinaryTree(root *stringBinaryTreeNode) string {
 	if root == nil {

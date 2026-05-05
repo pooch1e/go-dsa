@@ -1,6 +1,9 @@
 package linkedlist
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestReverseLinkedList tests solution(s) with the following signature and problem description:
@@ -16,20 +19,15 @@ Reverse a linked list in-place.
 
 For example given 1->2->3, return 3->2->1.
 */
-func TestReverseLinkedList(t *testing.T) {
-	tests := []struct {
-		list, reversed string
-	}{
-		{"", ""},
-		{"1", "1"},
-		{"1->2", "2->1"},
-		{"1->2->3", "3->2->1"},
-	}
-
-	for i, test := range tests {
-		got := Serialize(ReverseLinkedList(Deserialize(test.list)))
-		if got != test.reversed {
-			t.Fatalf("Failed test case #%d. Want %s got %s", i, test.reversed, got)
+var _ = DescribeTable("ReverseLinkedList",
+	func(list string, reversed string) {
+		got := Serialize(ReverseLinkedList(Deserialize(list)))
+		if got != reversed {
+			Expect(got).To(Equal(reversed))
 		}
-	}
-}
+	},
+	Entry("ReverseLinkedList #1", "", ""),
+	Entry("ReverseLinkedList #2", "1", "1"),
+	Entry("ReverseLinkedList #3", "1->2", "2->1"),
+	Entry("ReverseLinkedList #4", "1->2->3", "3->2->1"),
+)

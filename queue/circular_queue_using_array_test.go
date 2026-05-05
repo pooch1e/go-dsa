@@ -1,6 +1,17 @@
 package queue
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
+
+type testRound struct {
+	enqueueStart int
+	enqueueEnd   int
+	dequeueStart int
+	dequeueEnd   int
+	expectedErr  error
+}
 
 /*
 TestCircularQueue tests solution(s) with the following signature and problem description:
@@ -42,47 +53,30 @@ we should get 3 and 4.
 
 As shown in the above example the circular queue does not run out of capacity and still allows FIFO operations.
 */
-func TestCircularQueue(t *testing.T) {
-	type testRound struct {
-		enqueueStart int
-		enqueueEnd   int
-		dequeueStart int
-		dequeueEnd   int
-		expectedErr  error
-	}
-
-	tests := []struct {
-		size       int
-		testRounds []testRound
-	}{
-		{1, []testRound{{1, 6, 6, 6, nil}}},
-		{2, []testRound{{1, 6, 5, 5, nil}}},
-		{4, []testRound{{1, 6, 3, 6, nil}}},
-		{4, []testRound{{1, 6, 3, 6, nil}, {1, 6, 3, 6, nil}}},
-		{4, []testRound{{1, 6, 3, 7, ErrQueueEmpty}}},
-	}
-
-	for i, test := range tests {
-		queue := NewCircularQueue(test.size)
-
-		for j, testRound := range test.testRounds {
+var _ = DescribeTable("CircularQueue",
+	func(size int, testRounds []testRound) {
+		queue := NewCircularQueue(size)
+		for j, testRound := range testRounds {
 			for i := testRound.enqueueStart; i <= testRound.enqueueEnd; i++ {
 				queue.enqueue(i)
 			}
-
 			for want := testRound.dequeueStart; want <= testRound.dequeueEnd; want++ {
 				got, err := queue.dequeue()
 				if err != nil {
 					if err != testRound.expectedErr {
-						t.Fatalf("Failed test case #%d round #%d. Unexpected error %s", i, j, err)
+						Expect(j, err).ToNot(HaveOccurred())
 					}
 					break
 				}
-
 				if got != want {
-					t.Fatalf("Failed test case #%d round #%d. Want %d, got %d", i, j, want, got)
+					Expect(want, got).To(Equal(j))
 				}
 			}
 		}
-	}
-}
+	},
+	Entry("CircularQueue #1", 1, []testRound{{1, 6, 6, 6, nil}}),
+	Entry("CircularQueue #2", 2, []testRound{{1, 6, 5, 5, nil}}),
+	Entry("CircularQueue #3", 4, []testRound{{1, 6, 3, 6, nil}}),
+	Entry("CircularQueue #4", 4, []testRound{{1, 6, 3, 6, nil}, {1, 6, 3, 6, nil}}),
+	Entry("CircularQueue #5", 4, []testRound{{1, 6, 3, 7, ErrQueueEmpty}}),
+)

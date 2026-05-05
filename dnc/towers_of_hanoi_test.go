@@ -1,8 +1,10 @@
 package dnc
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -21,22 +23,16 @@ The second move is to move the top disk from tower 1 to tower 3.
 The final move is to move the top disk from 2 to 3.
 By the end all disks are moved from tower 1 to tower 3.
 */
-func TestTowerOfHanoi(t *testing.T) {
-	tests := []struct {
-		n, start, end int
-		moves         [][2]int
-	}{
-		{0, 1, 1, [][2]int{{1, 1}}},
-		{1, 1, 1, [][2]int{{1, 1}}},
-		{1, 1, 2, [][2]int{{1, 2}}},
-		{2, 1, 3, [][2]int{{1, 2}, {1, 3}, {2, 3}}},
-		{3, 1, 3, [][2]int{{1, 3}, {1, 2}, {3, 2}, {1, 3}, {2, 1}, {2, 3}, {1, 3}}},
-		{4, 1, 3, [][2]int{{1, 2}, {1, 3}, {2, 3}, {1, 2}, {3, 1}, {3, 2}, {1, 2}, {1, 3}, {2, 3}, {2, 1}, {3, 1}, {2, 3}, {1, 2}, {1, 3}, {2, 3}}},
-	}
-
-	for i, test := range tests {
-		if got := TowerOfHanoi(test.n, test.start, test.end); !slices.Equal(got, test.moves) {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.moves, got)
+var _ = DescribeTable("TowerOfHanoi",
+	func(n int, start int, end int, moves [][2]int) {
+		if got := TowerOfHanoi(n, start, end); !slices.Equal(got, moves) {
+			Expect(got).To(Equal(moves))
 		}
-	}
-}
+	},
+	Entry("TowerOfHanoi #1", 0, 1, 1, [][2]int{{1, 1}}),
+	Entry("TowerOfHanoi #2", 1, 1, 1, [][2]int{{1, 1}}),
+	Entry("TowerOfHanoi #3", 1, 1, 2, [][2]int{{1, 2}}),
+	Entry("TowerOfHanoi #4", 2, 1, 3, [][2]int{{1, 2}, {1, 3}, {2, 3}}),
+	Entry("TowerOfHanoi #5", 3, 1, 3, [][2]int{{1, 3}, {1, 2}, {3, 2}, {1, 3}, {2, 1}, {2, 3}, {1, 3}}),
+	Entry("TowerOfHanoi #6", 4, 1, 3, [][2]int{{1, 2}, {1, 3}, {2, 3}, {1, 2}, {3, 1}, {3, 2}, {1, 2}, {1, 3}, {2, 3}, {2, 1}, {3, 1}, {2, 3}, {1, 2}, {1, 3}, {2, 3}}),
+)

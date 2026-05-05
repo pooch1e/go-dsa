@@ -1,6 +1,9 @@
 package strings
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestReadNumberInEnglish tests solution(s) with the following signature and problem description:
@@ -14,26 +17,20 @@ For example given 34, return "Thirty Four".
 For example given 10, return "Ten".
 For example given 900000000001, return "Nine Hundred Billion One".
 */
-func TestReadNumberInEnglish(t *testing.T) {
-	tests := []struct {
-		number  int
-		english string
-	}{
-		{0, "Zero"},
-		{1, "One"},
-		{2, "Two"},
-		{10, "Ten"},
-		{34, "Thirty Four"},
-		{123456789, "One Hundred Twenty Three Million Four Hundred Fifty Six Thousand Seven Hundred Eighty Nine"},
-		{1000000000, "One Billion"},
-		{100000000000, "One Hundred Billion"},
-		{900000000001, "Nine Hundred Billion One"},
-	}
-
-	for i, test := range tests {
-		got := NumberInEnglish(test.number)
-		if got != test.english {
-			t.Fatalf("Failed test case #%d. Want %q got %q", i, test.english, got)
+var _ = DescribeTable("ReadNumberInEnglish",
+	func(number int, english string) {
+		got := NumberInEnglish(number)
+		if got != english {
+			Expect(got).To(Equal(english))
 		}
-	}
-}
+	},
+	Entry("ReadNumberInEnglish #1", 0, "Zero"),
+	Entry("ReadNumberInEnglish #2", 1, "One"),
+	Entry("ReadNumberInEnglish #3", 2, "Two"),
+	Entry("ReadNumberInEnglish #4", 10, "Ten"),
+	Entry("ReadNumberInEnglish #5", 34, "Thirty Four"),
+	Entry("ReadNumberInEnglish #6", 123456789, "One Hundred Twenty Three Million Four Hundred Fifty Six Thousand Seven Hundred Eighty Nine"),
+	Entry("ReadNumberInEnglish #7", 1000000000, "One Billion"),
+	Entry("ReadNumberInEnglish #8", 100000000000, "One Hundred Billion"),
+	Entry("ReadNumberInEnglish #9", 900000000001, "Nine Hundred Billion One"),
+)

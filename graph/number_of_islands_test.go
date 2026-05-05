@@ -1,6 +1,9 @@
 package graph
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestNumberOfIslands tests solution(s) with the following signature and problem description:
@@ -11,22 +14,16 @@ Given a grid in which 0 represents water and 1 represents a piece of land, retur
 number of islands. An Island is one or more piece of land that could be connected to other
 pieces of land on left, right, top or bottom.
 */
-func TestNumberOfIslands(t *testing.T) {
-	tests := []struct {
-		grid        [][]int
-		islandCount int
-	}{
-		{[][]int{}, 0},
-		{[][]int{{1, 0, 0}, {0, 0, 0}}, 1},
-		{[][]int{{1, 0, 1}, {0, 0, 0}}, 2},
-		{[][]int{{1, 0, 1}, {0, 0, 0}, {0, 1, 0}}, 3},
-		{[][]int{{1, 0, 1}, {0, 0, 0}, {0, 1, 1}}, 3},
-		{[][]int{{1, 0, 1}, {0, 0, 1}, {0, 1, 1}}, 2},
-	}
-
-	for i, test := range tests {
-		if got := NumberOfIslands(test.grid); got != test.islandCount {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.islandCount, got)
+var _ = DescribeTable("NumberOfIslands",
+	func(grid [][]int, islandCount int) {
+		if got := NumberOfIslands(grid); got != islandCount {
+			Expect(got).To(Equal(islandCount))
 		}
-	}
-}
+	},
+	Entry("NumberOfIslands #1", [][]int{}, 0),
+	Entry("NumberOfIslands #2", [][]int{{1, 0, 0}, {0, 0, 0}}, 1),
+	Entry("NumberOfIslands #3", [][]int{{1, 0, 1}, {0, 0, 0}}, 2),
+	Entry("NumberOfIslands #4", [][]int{{1, 0, 1}, {0, 0, 0}, {0, 1, 0}}, 3),
+	Entry("NumberOfIslands #5", [][]int{{1, 0, 1}, {0, 0, 0}, {0, 1, 1}}, 3),
+	Entry("NumberOfIslands #6", [][]int{{1, 0, 1}, {0, 0, 1}, {0, 1, 1}}, 2),
+)

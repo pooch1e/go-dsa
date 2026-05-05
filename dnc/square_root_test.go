@@ -1,9 +1,15 @@
 package dnc
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"math"
-	"testing"
 )
+
+func floatAlmostEquals(a, b float64) bool {
+	return math.Abs(a-b) <= 1e9 // Equality threshold
+}
 
 /*
 TestSquareRoot tests solution(s) with the following signature and problem description:
@@ -15,29 +21,18 @@ search algorithm.
 
 For example given 9 and 3, it should return 3.
 */
-func TestSquareRoot(t *testing.T) {
-	tests := []struct {
-		number    int
-		precision int
-		solution  float64
-	}{
-		{0, 0, 1},
-		{1, 0, 1},
-		{1, 1, 1},
-		{4, 1, 2},
-		{4, 2, 1.9999999999999998},
-		{4, 3, 2},
-		{5, 3, 2},
-		{9, 3, 3},
-	}
-
-	floatAlmostEquals := func(a, b float64) bool {
-		return math.Abs(a-b) <= 1e9 // Equality threshold
-	}
-
-	for i, test := range tests {
-		if got := SquareRoot(test.number, test.precision); !floatAlmostEquals(got, test.solution) {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.solution, got)
+var _ = DescribeTable("SquareRoot",
+	func(number int, precision int, solution float64) {
+		if got := SquareRoot(number, precision); !floatAlmostEquals(got, solution) {
+			Expect(got).To(Equal(solution))
 		}
-	}
-}
+	},
+	Entry("SquareRoot #1", 0, 0, float64(1)),
+	Entry("SquareRoot #2", 1, 0, float64(1)),
+	Entry("SquareRoot #3", 1, 1, float64(1)),
+	Entry("SquareRoot #4", 4, 1, float64(2)),
+	Entry("SquareRoot #5", 4, 2, 1.9999999999999998),
+	Entry("SquareRoot #6", 4, 3, float64(2)),
+	Entry("SquareRoot #7", 5, 3, float64(2)),
+	Entry("SquareRoot #8", 9, 3, float64(3)),
+)

@@ -1,10 +1,12 @@
 package linkedlist
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"math"
 	"strconv"
 	"strings"
-	"testing"
 )
 
 const (
@@ -33,35 +35,28 @@ In the string representation below "1:nil->2:1->3:4->4:nil" is a linked list wit
 * Nodes 1,2,3,4 are sequentially connected to each other with the Next pointer.
 * Node 2 is randomly connected to node 1, and node 3 is randomly connected to node 4.
 */
-func TestCopyLinkedListWithRandomPointer(t *testing.T) {
-	tests := []struct {
-		list string
-	}{
-		{""},
-		{"1:nil"}, // What follows after : is the index of the node the random link is connected to
-		{"1:1"},
-		{"1:nil->2:1->3:4->4:nil"},
-		{"1:nil->2:1->3:4->4:nil"},
-		{"1:nil->2:1->2:nil->3:4->4:nil"},
-	}
-
-	for i, test := range tests {
-		list := deserializeRandomNode(test.list)
+var _ = DescribeTable("CopyLinkedListWithRandomPointer",
+	func(listStr string) {
+		list := deserializeRandomNode(listStr)
 		deepCopy := CopyLinkedListWithRandomPointer(list)
-
 		if list != nil {
 			list.Random = &RandomNode{Val: math.MinInt64, Next: nil}
 			if deepCopy.Random != nil && deepCopy.Random.Val == math.MinInt64 {
-				t.Fatal("Not a deep copy. Changing the value in the original list, changed the value in whats expected to be a deep copy")
+				Fail("Not a deep copy. Changing the value in the original list, changed the value in whats expected to be a deep copy")
 			}
 		}
-
 		got := serializeRandomNode(deepCopy)
-		if got != test.list {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.list, got)
+		if got != listStr {
+			Expect(got).To(Equal(listStr))
 		}
-	}
-}
+	},
+	Entry("CopyLinkedListWithRandomPointer #1", ""),
+	Entry("CopyLinkedListWithRandomPointer #2", "1:nil"),
+	Entry("CopyLinkedListWithRandomPointer #3", "1:1"),
+	Entry("CopyLinkedListWithRandomPointer #4", "1:nil->2:1->3:4->4:nil"),
+	Entry("CopyLinkedListWithRandomPointer #5", "1:nil->2:1->3:4->4:nil"),
+	Entry("CopyLinkedListWithRandomPointer #6", "1:nil->2:1->2:nil->3:4->4:nil"),
+)
 
 func serializeRandomNode(node *RandomNode) string {
 	if node == nil {

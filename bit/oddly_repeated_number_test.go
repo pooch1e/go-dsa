@@ -1,6 +1,9 @@
 package bit
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestOddlyRepeatedNumber tests solution(s) with the following signature and problem description:
@@ -12,21 +15,15 @@ find the oddly repeated element.
 
 For example given {1, 2, 2, 3, 3} return 1. Given {1, 2, 1, 2, 3} return 3.
 */
-func TestOddlyRepeatedNumber(t *testing.T) {
-	tests := []struct {
-		list          []int
-		oddlyRepeated int
-	}{
-		{[]int{}, -1},
-		{[]int{1, 2, 2}, 1},
-		{[]int{1, 2, 1, 2, 3}, 3},
-		{[]int{1, 2, 2, 3, 3}, 1},
-	}
-
-	for i, test := range tests {
-		got := OddlyRepeatedNumber(test.list)
-		if got != test.oddlyRepeated {
-			t.Fatalf("Failed test case #%d. Want %d got %d", i, test.oddlyRepeated, got)
+var _ = DescribeTable("OddlyRepeatedNumber",
+	func(list []int, oddlyRepeated int) {
+		got := OddlyRepeatedNumber(list)
+		if got != oddlyRepeated {
+			Expect(got).To(Equal(oddlyRepeated))
 		}
-	}
-}
+	},
+	Entry("OddlyRepeatedNumber #1", []int{}, -1),
+	Entry("OddlyRepeatedNumber #2", []int{1, 2, 2}, 1),
+	Entry("OddlyRepeatedNumber #3", []int{1, 2, 1, 2, 3}, 3),
+	Entry("OddlyRepeatedNumber #4", []int{1, 2, 2, 3, 3}, 1),
+)

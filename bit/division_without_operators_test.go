@@ -1,6 +1,9 @@
 package bit
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestDivision tests solution(s) with the following signature and problem description:
@@ -11,21 +14,16 @@ Given two integers, divide them without using the built-in `/` or `*` operators.
 
 For example given 20 and 4 return 5.
 */
-func TestDivision(t *testing.T) {
-	tests := []struct {
-		a, b int
-	}{
-		{0, 1},
-		{20, 2},
-		{20, 4},
-		{20, 3},
-	}
-
-	for i, test := range tests {
-		got := Divide(test.a, test.b)
-		want := test.a / test.b
+var _ = DescribeTable("Division",
+	func(a int, b int) {
+		got := Divide(a, b)
+		want := a / b
 		if got != want {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, want, got)
+			Expect(got).To(Equal(want))
 		}
-	}
-}
+	},
+	Entry("Division #1", 0, 1),
+	Entry("Division #2", 20, 2),
+	Entry("Division #3", 20, 4),
+	Entry("Division #4", 20, 3),
+)

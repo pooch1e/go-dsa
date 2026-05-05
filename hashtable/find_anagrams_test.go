@@ -1,8 +1,10 @@
 package hashtable
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"reflect"
-	"testing"
 )
 
 /*
@@ -16,20 +18,14 @@ anagrams if rearranging the letters of one results in the other.
 For example given {"cat", "tac", "bar", "baz", "act"} return {"cat", "tac", "act"} because they are
 the only anagrams in the list.
 */
-func TestFindAnagrams(t *testing.T) {
-	tests := []struct {
-		words    []string
-		anagrams [][]string
-	}{
-		{[]string{"foo", "bar", "baz"}, [][]string{}},
-		{[]string{"foo", "cat", "tac", "act"}, [][]string{{"cat", "tac", "act"}}},
-		{[]string{"car", "cap", "arc", "tac"}, [][]string{{"car", "arc"}}},
-	}
-
-	for i, test := range tests {
-		got := FindAnagrams(test.words)
-		if !reflect.DeepEqual(got, test.anagrams) {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.anagrams, got)
+var _ = DescribeTable("FindAnagrams",
+	func(words []string, anagrams [][]string) {
+		got := FindAnagrams(words)
+		if !reflect.DeepEqual(got, anagrams) {
+			Expect(got).To(Equal(anagrams))
 		}
-	}
-}
+	},
+	Entry("FindAnagrams #1", []string{"foo", "bar", "baz"}, [][]string{}),
+	Entry("FindAnagrams #2", []string{"foo", "cat", "tac", "act"}, [][]string{{"cat", "tac", "act"}}),
+	Entry("FindAnagrams #3", []string{"car", "cap", "arc", "tac"}, [][]string{{"car", "arc"}}),
+)

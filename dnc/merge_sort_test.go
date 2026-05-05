@@ -1,8 +1,10 @@
 package dnc
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -22,23 +24,17 @@ divide the array into two halves: {3} and {1,2}. It would then it would divide {
 into {1} and {2}. Finally, it would merge the two halves back together
 into a single sorted array: {1,2,3}.
 */
-func TestMergeSort(t *testing.T) {
-	tests := []struct {
-		list   []int
-		sorted []int
-	}{
-		{[]int{}, []int{}},
-		{[]int{1, 2}, []int{1, 2}},
-		{[]int{2, 1}, []int{1, 2}},
-		{[]int{1, 2, 3}, []int{1, 2, 3}},
-		{[]int{3, 2, 1}, []int{1, 2, 3}},
-		{[]int{1, 3, 2}, []int{1, 2, 3}},
-		{[]int{-1, 3, 2, 0, 4}, []int{-1, 0, 2, 3, 4}},
-	}
-
-	for i, test := range tests {
-		if got := MergeSort(test.list); !slices.Equal(got, test.sorted) {
-			t.Fatalf("Failed test case #%d. Want %v got %v", i, test.sorted, got)
+var _ = DescribeTable("MergeSort",
+	func(list []int, sorted []int) {
+		if got := MergeSort(list); !slices.Equal(got, sorted) {
+			Expect(got).To(Equal(sorted))
 		}
-	}
-}
+	},
+	Entry("MergeSort #1", []int{}, []int{}),
+	Entry("MergeSort #2", []int{1, 2}, []int{1, 2}),
+	Entry("MergeSort #3", []int{2, 1}, []int{1, 2}),
+	Entry("MergeSort #4", []int{1, 2, 3}, []int{1, 2, 3}),
+	Entry("MergeSort #5", []int{3, 2, 1}, []int{1, 2, 3}),
+	Entry("MergeSort #6", []int{1, 3, 2}, []int{1, 2, 3}),
+	Entry("MergeSort #7", []int{-1, 3, 2, 0, 4}, []int{-1, 0, 2, 3, 4}),
+)

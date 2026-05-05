@@ -1,8 +1,10 @@
 package queue
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -15,22 +17,16 @@ using a queue.
 
 For example given "abc" return "abc,acb,bac,bca,cab,cba".
 */
-func TestStringPermutations(t *testing.T) {
-	tests := []struct {
-		input        string
-		permutations []string
-	}{
-		{"", []string{""}},
-		{"a", []string{"a"}},
-		{"ab", []string{"ab", "ba"}},
-		{"ba", []string{"ba", "ab"}},
-		{"abc", []string{"abc", "acb", "bac", "bca", "cab", "cba"}},
-		{"123", []string{"123", "132", "213", "231", "312", "321"}},
-	}
-
-	for i, test := range tests {
-		if got := StringPermutations(test.input); !slices.Equal(got, test.permutations) {
-			t.Fatalf("Failed test #%d, Failed getting list of maximums. Want %#v got %#v", i, test.permutations, got)
+var _ = DescribeTable("StringPermutations",
+	func(input string, permutations []string) {
+		if got := StringPermutations(input); !slices.Equal(got, permutations) {
+			Expect(got).To(Equal(permutations))
 		}
-	}
-}
+	},
+	Entry("StringPermutations #1", "", []string{""}),
+	Entry("StringPermutations #2", "a", []string{"a"}),
+	Entry("StringPermutations #3", "ab", []string{"ab", "ba"}),
+	Entry("StringPermutations #4", "ba", []string{"ba", "ab"}),
+	Entry("StringPermutations #5", "abc", []string{"abc", "acb", "bac", "bca", "cab", "cba"}),
+	Entry("StringPermutations #6", "123", []string{"123", "132", "213", "231", "312", "321"}),
+)

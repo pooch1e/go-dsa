@@ -1,6 +1,9 @@
 package strings
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestIntToRoman tests solution(s) with the following signature and problem description:
@@ -26,26 +29,21 @@ For example:
 * Given 1000, return M
 * Given 1917, return MCMXVII.
 */
-func TestIntToRoman(t *testing.T) {
-	tests := []struct {
-		number int
-		roman  string
-	}{
-		{0, ""},
-		{1, "I"},
-		{2, "II"},
-		{3, "III"},
-		{4, "IV"},
-		{5, "V"},
-		{6, "VI"},
-		{58, "LVIII"},
-		{60, "LX"},
-		{1000, "M"},
-		{1917, "MCMXVII"},
-	}
-	for i, test := range tests {
-		if got := IntToRoman(test.number); got != test.roman {
-			t.Fatalf("Failed test case #%d. Want %s got %s", i, test.roman, got)
+var _ = DescribeTable("IntToRoman",
+	func(number int, roman string) {
+		if got := IntToRoman(number); got != roman {
+			Expect(got).To(Equal(roman))
 		}
-	}
-}
+	},
+	Entry("IntToRoman #1", 0, ""),
+	Entry("IntToRoman #2", 1, "I"),
+	Entry("IntToRoman #3", 2, "II"),
+	Entry("IntToRoman #4", 3, "III"),
+	Entry("IntToRoman #5", 4, "IV"),
+	Entry("IntToRoman #6", 5, "V"),
+	Entry("IntToRoman #7", 6, "VI"),
+	Entry("IntToRoman #8", 58, "LVIII"),
+	Entry("IntToRoman #9", 60, "LX"),
+	Entry("IntToRoman #10", 1000, "M"),
+	Entry("IntToRoman #11", 1917, "MCMXVII"),
+)

@@ -1,6 +1,9 @@
 package bit
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestMiddleWithoutDivision tests solution(s) with the following signature and problem description:
@@ -12,24 +15,19 @@ using any arithmetic operators such as {+,-,/,*,++,--,+=,…}.
 
 For example given 1 and 5, return 3. This is because 3 is in the middle of integers 1 to 5.
 */
-func TestMiddleWithoutDivision(t *testing.T) {
-	tests := []struct {
-		a, b, mid int
-	}{
-		{0, 0, 0},
-		{0, 1, 0},
-		{0, 5, 2},
-		{1, 5, 3},
-		{0, 6, 3},
-		{1, 5, 3},
-		{2, 20, 11},
-		{2, -2, 0},
-		{-3, -2, -3},
-	}
-
-	for i, test := range tests {
-		if got := MiddleWithoutDivision(test.a, test.b); got != test.mid {
-			t.Fatalf("Failed test case #%d. Want %d got %d", i, test.mid, got)
+var _ = DescribeTable("MiddleWithoutDivision",
+	func(a int, b int, mid int) {
+		if got := MiddleWithoutDivision(a, b); got != mid {
+			Expect(got).To(Equal(mid))
 		}
-	}
-}
+	},
+	Entry("MiddleWithoutDivision #1", 0, 0, 0),
+	Entry("MiddleWithoutDivision #2", 0, 1, 0),
+	Entry("MiddleWithoutDivision #3", 0, 5, 2),
+	Entry("MiddleWithoutDivision #4", 1, 5, 3),
+	Entry("MiddleWithoutDivision #5", 0, 6, 3),
+	Entry("MiddleWithoutDivision #6", 1, 5, 3),
+	Entry("MiddleWithoutDivision #7", 2, 20, 11),
+	Entry("MiddleWithoutDivision #8", 2, -2, 0),
+	Entry("MiddleWithoutDivision #9", -3, -2, -3),
+)

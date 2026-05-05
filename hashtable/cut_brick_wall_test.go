@@ -1,6 +1,9 @@
 package hashtable
 
-import "testing"
+import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+)
 
 /*
 TestCutBrickWall tests solution(s) with the following signature and problem description:
@@ -31,22 +34,16 @@ For example given {1, 2, 2}, {3, 2}, {2, 3}, return 3.
 
 We can have the above wall after cutting only one brick at position 2 row 3.
 */
-func TestCutBrickWall(t *testing.T) {
-	tests := []struct {
-		cutPosition int
-		bricks      [][]int
-	}{
-		{0, [][]int{}},
-		{3, [][]int{{1, 2, 2}, {3, 2}, {2, 3}}},
-		{5, [][]int{{5, 4, 1}, {2, 2, 1, 3, 2}, {3, 2, 4, 1}, {3, 4, 3}, {2, 3, 5}, {3, 2, 1, 4}}},
-		{1, [][]int{{2, 5, 4, 1}, {1, 2, 2, 1, 3, 2}, {1, 3, 2, 4, 1}, {1, 3, 4, 3}}},
-		{1, [][]int{{2, 5, 4, 1}, {1, 2, 2, 1, 3, 2}, {1, 3, 2, 4, 1}, {1, 3, 4, 3}}},
-	}
-
-	for i, test := range tests {
-		got := CutBrickWall(test.bricks)
-		if got != test.cutPosition {
-			t.Fatalf("Failed test case #%d. Want %#v got %#v", i, test.cutPosition, got)
+var _ = DescribeTable("CutBrickWall",
+	func(cutPosition int, bricks [][]int) {
+		got := CutBrickWall(bricks)
+		if got != cutPosition {
+			Expect(got).To(Equal(cutPosition))
 		}
-	}
-}
+	},
+	Entry("CutBrickWall #1", 0, [][]int{}),
+	Entry("CutBrickWall #2", 3, [][]int{{1, 2, 2}, {3, 2}, {2, 3}}),
+	Entry("CutBrickWall #3", 5, [][]int{{5, 4, 1}, {2, 2, 1, 3, 2}, {3, 2, 4, 1}, {3, 4, 3}, {2, 3, 5}, {3, 2, 1, 4}}),
+	Entry("CutBrickWall #4", 1, [][]int{{2, 5, 4, 1}, {1, 2, 2, 1, 3, 2}, {1, 3, 2, 4, 1}, {1, 3, 4, 3}}),
+	Entry("CutBrickWall #5", 1, [][]int{{2, 5, 4, 1}, {1, 2, 2, 1, 3, 2}, {1, 3, 2, 4, 1}, {1, 3, 4, 3}}),
+)

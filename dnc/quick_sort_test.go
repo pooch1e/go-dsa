@@ -1,8 +1,10 @@
 package dnc
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -22,23 +24,17 @@ choose a pivot element, say 2. It would then partition the array into two
 sub-arrays: {1} and {3}. It would then recursively sort the two sub-arrays
 and combine them with the pivot element to produce the final sorted.
 */
-func TestQuickSort(t *testing.T) {
-	tests := []struct {
-		list   []int
-		sorted []int
-	}{
-		{[]int{}, []int{}},
-		{[]int{1, 2}, []int{1, 2}},
-		{[]int{2, 1}, []int{1, 2}},
-		{[]int{1, 2, 3}, []int{1, 2, 3}},
-		{[]int{3, 2, 1}, []int{1, 2, 3}},
-		{[]int{1, 3, 2}, []int{1, 2, 3}},
-		{[]int{-1, 3, 2, 0, 4}, []int{-1, 0, 2, 3, 4}},
-	}
-
-	for i, test := range tests {
-		if got := QuickSort(test.list); !slices.Equal(got, test.sorted) {
-			t.Fatalf("Failed test case #%d. Want %v got %v", i, test.sorted, got)
+var _ = DescribeTable("QuickSort",
+	func(list []int, sorted []int) {
+		if got := QuickSort(list); !slices.Equal(got, sorted) {
+			Expect(got).To(Equal(sorted))
 		}
-	}
-}
+	},
+	Entry("QuickSort #1", []int{}, []int{}),
+	Entry("QuickSort #2", []int{1, 2}, []int{1, 2}),
+	Entry("QuickSort #3", []int{2, 1}, []int{1, 2}),
+	Entry("QuickSort #4", []int{1, 2, 3}, []int{1, 2, 3}),
+	Entry("QuickSort #5", []int{3, 2, 1}, []int{1, 2, 3}),
+	Entry("QuickSort #6", []int{1, 3, 2}, []int{1, 2, 3}),
+	Entry("QuickSort #7", []int{-1, 3, 2, 0, 4}, []int{-1, 0, 2, 3, 4}),
+)

@@ -1,8 +1,10 @@
 package queue
 
 import (
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
 	"slices"
-	"testing"
 )
 
 /*
@@ -18,24 +20,17 @@ For example given {1,2,3,4,5} and k=2 return {2,3,4,5} because:
 * Sub-arrays of the input with length 2 are {{1,2},{2,3},{3,4},{4,5}}
 * The maximum in each of the sub-arrays is {2,3,4,5}.
 */
-func TestMaxOfKLengthSubArrays(t *testing.T) {
-	tests := []struct {
-		k        int
-		list     []int
-		maximums []int
-	}{
-		{3, []int{5, 3, 5, 6, 7, 8}, []int{5, 6, 7, 8}},
-		{2, []int{5, 3, 5, 6, 7, 8}, []int{5, 5, 6, 7, 8}},
-		{3, []int{1, 2, 3, 4, 5}, []int{3, 4, 5}},
-	}
-
-	for i, test := range tests {
-		got, err := MaxOfKLengthSubArrays(test.list, test.k)
+var _ = DescribeTable("MaxOfKLengthSubArrays",
+	func(k int, list []int, maximums []int) {
+		got, err := MaxOfKLengthSubArrays(list, k)
 		if err != nil {
-			t.Fatalf("Unexpected error occurred. Error : %s", err)
+			Expect(err).ToNot(HaveOccurred())
 		}
-		if !slices.Equal(got, test.maximums) {
-			t.Fatalf("Failed test #%d, Failed getting list of maximums. Want %#v got %#v", i, test.maximums, got)
+		if !slices.Equal(got, maximums) {
+			Expect(got).To(Equal(maximums))
 		}
-	}
-}
+	},
+	Entry("MaxOfKLengthSubArrays #1", 3, []int{5, 3, 5, 6, 7, 8}, []int{5, 6, 7, 8}),
+	Entry("MaxOfKLengthSubArrays #2", 2, []int{5, 3, 5, 6, 7, 8}, []int{5, 5, 6, 7, 8}),
+	Entry("MaxOfKLengthSubArrays #3", 3, []int{1, 2, 3, 4, 5}, []int{3, 4, 5}),
+)
